@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="TraceUtils.SourceGenerator.Tests/TraceUtils.SourceGenerator.Tests.csproj" Id="5be39a77-4a73-48df-9c5b-222ccaa6afc8" />
+  <Project Path="TraceUtils.SourceGenerator/TraceUtils.SourceGenerator.csproj" Id="26a4eb53-f571-48fb-8c99-81fb7335408b" />
+  <Project Path="TraceUtils/TraceUtils.csproj" />
+</Solution>
