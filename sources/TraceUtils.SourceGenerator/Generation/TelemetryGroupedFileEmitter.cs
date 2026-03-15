@@ -1,18 +1,16 @@
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using System.Collections.Immutable;
 using System.Text;
 using TraceUtils.SourceGenerator.Models;
 
-namespace TraceUtils.SourceGenerator.Generation;
+namespace TraceUtils.SourceGenerator.Infrastructure;
 
 /// <summary>
-/// Генерирует итоговые `.g.cs` файлы, группируя методы по интерфейсу.
+/// Генерирует сгруппированные файлы с extension-методами телеметрии.
 /// </summary>
 internal static class TelemetryGroupedFileEmitter
 {
-    public static void GenerateGroupedFiles(
-        SourceProductionContext context,
-        ((string Namespace, string Type) Key, ImmutableArray<MethodSignatureInfo> Methods) group)
+    public static void GenerateGroupedFiles(SourceProductionContext context, ((string Namespace, string Type) Key, ImmutableArray<MethodContextInfo> Methods) group)
     {
         var simpleTypeName = GetSimpleTypeName(group.Key.Type);
 
@@ -31,17 +29,13 @@ internal static class TelemetryGroupedFileEmitter
         context.AddSource($"{simpleTypeName}TelemetryExtensions.g.cs", source);
     }
 
-    private static string GetSimpleTypeName(string fullyQualifiedName)
+    private static string GetSimpleTypeName(string typeName)
     {
-        var parts = fullyQualifiedName.Split('.');
-        var simpleName = parts[parts.Length - 1];
+        if (typeName.StartsWith("I") && typeName.Length > 1 && char.IsUpper(typeName[1]))
+        {
+            return typeName.Substring(1);
+        }
 
-        if (simpleName.StartsWith("global::", StringComparison.Ordinal))
-            simpleName = simpleName.Substring("global::".Length);
-
-        if (simpleName.StartsWith("I", StringComparison.Ordinal) && simpleName.Length > 1 && char.IsUpper(simpleName[1]))
-            simpleName = simpleName.Substring(1);
-
-        return simpleName;
+        return typeName;
     }
 }

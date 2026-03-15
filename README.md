@@ -1,116 +1,48 @@
 # OpenTelemetrySourceGenerator
 
-Source Generator, который генерирует extension-методы для оборачивания вызовов интерфейсов в tracing (`Activity`/span).
+A source generator that creates extension methods to wrap interface calls with tracing (`Activity`/span).
 
-## Что в репозитории
+## What’s in the repository
 
-- `sources/TraceUtils` - атрибуты и runtime-утилиты.
-- `sources/TraceUtils.SourceGenerator` - Roslyn Source Generator.
-- `sources/TraceUtils.SourceGenerator.Tests` - тесты генератора (NUnit + Verify snapshots).
+- `sources/TraceUtils` – attributes and runtime utilities.
+- `sources/TraceUtils.SourceGenerator` – Roslyn Source Generator.
+- `sources/TraceUtils.SourceGenerator.Tests` – generator tests (NUnit + Verify snapshots).
 
-## Быстрый старт локально
+## How to use
 
-1. Установите .NET SDK (рекомендуется актуальная версия).
-2. Клонируйте репозиторий и откройте решение `sources/TraceUtils.slnx`.
-3. Выполните сборку:
+### 1. Project setup
 
-```powershell
-dotnet build .\sources\TraceUtils.slnx
-```
+Add the following NuGet references to the project:
 
-4. Запустите тесты генератора:
++ `TraceUtils`
++ `TraceUtils.SourceGenerator`
++ `OpenTelemetry` (official .NET SDK)
 
-```powershell
-dotnet test .\sources\TraceUtils.SourceGenerator.Tests\TraceUtils.SourceGenerator.Tests.csproj
-```
+### 2. Interface annotations
 
-## Как подключить генератор в свой проект
++ **On methods**: `[ActivityOperation("OperationName", ActivityType.Internal)]` — defines the operation name and activity type.
++ **On arguments**: `[SpanTag("tag.name")]` or `[SpanTag("tag.name", shouldSerialize: true)]` — writes parameters to the span as tags (the second option serializes complex types).
 
-Есть 2 основных способа: через `ProjectReference` (удобно для локальной разработки) или через NuGet (для использования в других репозиториях).
+### 3. Calling generated methods
 
-### Вариант 1: локально через ProjectReference
+The generator creates extension methods in `TraceUtils.Extensions`:
 
-В проект-потребитель (`.csproj`) добавьте ссылку на generator-проект как analyzer:
++ **sync**: `MethodNameWithTrace(...)`
++ **async**: `MethodNameWithTraceAsync(...)`
 
-```xml
-<ItemGroup>
-  <ProjectReference Include="..\TraceUtils\TraceUtils.csproj" />
-  <ProjectReference Include="..\TraceUtils.SourceGenerator\TraceUtils.SourceGenerator.csproj"
-                    OutputItemType="Analyzer"
-                    ReferenceOutputAssembly="false" />
-</ItemGroup>
-```
+Instead of calling `_service.Method(...)` directly, call `_service.MethodWithTrace(...)` so the invocation is captured in a span.
 
-`TraceUtils` нужен для атрибутов, а `TraceUtils.SourceGenerator` - для генерации кода на этапе компиляции.
+### 4. Registration in OpenTelemetry
 
-### Как сохранять сгенерированные `.cs` файлы на диск
+When configuring `OpenTelemetry TracerProvider`, register the activity source from `TraceUtils` (via `AddSource(TraceUtils.Utils.ServiceName)`) so that generated spans are exported by the selected exporter.
 
-Для удобной диагностики можно включить вывод generated-файлов в проекте-потребителе:
+```csharp
+using OpenTelemetry;
+using OpenTelemetry.Trace;
 
-```xml
-<PropertyGroup>
-  <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
-  <CompilerGeneratedFilesOutputPath>Generated\$(TargetFramework)</CompilerGeneratedFilesOutputPath>
-</PropertyGroup>
-```
-
-Чтобы файлы из этой папки не компилировались повторно как обычный исходный код, добавьте исключение:
-
-```xml
-<ItemGroup>
-  <Compile Remove="$(CompilerGeneratedFilesOutputPath)/**/*.cs" />
-</ItemGroup>
-```
-
-После этого можно смотреть результат генерации в папке `Generated/<TargetFramework>`.
-
-### Вариант 2: через NuGet (когда появится пакет)
-
-Подключите пакет с runtime-частью и пакет с analyzer/source generator.
-Для analyzer-пакета важно, чтобы он попадал как `Analyzer`, а не обычная runtime-зависимость.
-
-## Как настроить Roslyn-профиль для отладки генератора
-
-Рекомендуемый путь - отладка как Roslyn Component:
-
-Перед настройкой профиля убедитесь, что установлены:
-
-- .NET SDK.
-- компонент/пакет `.NET Compiler Platform` (Roslyn tools в IDE).
-
-1. Откройте `sources/TraceUtils.SourceGenerator/TraceUtils.SourceGenerator.csproj`.
-2. Добавьте в `PropertyGroup`:
-
-```xml
-<IsRoslynComponent>true</IsRoslynComponent>
-```
-
-3. Перезапустите IDE (если профиль не появился сразу).
-4. Создайте/выберите Debug Profile типа `Roslyn Component`.
-5. В профиле укажите целевой проект (проект-потребитель, где подключен генератор).
-6. Поставьте breakpoints в `TelemetryExtensionsGenerator` и коде рендеринга/трансформации.
-7. Запустите отладку профиля - IDE поднимет компиляцию целевого проекта, и генератор выполнится под отладчиком.
-
-## Отладка через тесты (тоже поддерживается)
-
-Генератор удобно дебажить и через тесты:
-
-1. Откройте проект `TraceUtils.SourceGenerator.Tests`.
-2. Поставьте breakpoints в код генератора и/или в тесте, который его вызывает.
-3. Запустите конкретный тест в режиме Debug (например, `TelemetryExtensionsGeneratorTests`).
-
-Плюсы этого подхода:
-
-- Быстрый воспроизводимый сценарий.
-- Легко покрывать edge-cases через test data.
-- Snapshot-проверки (`Verify`) помогают быстро увидеть, что именно сгенерировалось и что изменилось.
-
-## Полезные команды
-
-```powershell
-# Сборка всего решения
-dotnet build .\sources\TraceUtils.slnx
-
-# Прогон тестов генератора
-dotnet test .\sources\TraceUtils.SourceGenerator.Tests\TraceUtils.SourceGenerator.Tests.csproj
+// When configuring the trace provider:
+builder.Services.AddOpenTelemetry()
+    .WithTracing(tracing => tracing
+        .AddSource(TraceUtils.Utils.ServiceName)
+        .AddYourExporter(...));
 ```

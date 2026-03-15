@@ -1,7 +1,6 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using System.Collections.Immutable;
-using TraceUtils.Attributes;
 
 namespace TraceUtils.SourceGenerator.Tests.Infrastructure;
 
@@ -44,6 +43,6 @@ internal static class GeneratorTestHarness
             .Select(path => (MetadataReference)MetadataReference.CreateFromFile(path))
             .ToImmutableArray();
 
-        return references.Add(MetadataReference.CreateFromFile(typeof(TracerEventAttribute).Assembly.Location));
+        return references.Add(MetadataReference.CreateFromFile(typeof(ActivityOperationAttribute).Assembly.Location));
     }
 }

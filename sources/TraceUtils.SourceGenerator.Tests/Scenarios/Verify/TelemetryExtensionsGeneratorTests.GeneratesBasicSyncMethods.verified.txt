@@ -15,1453 +15,1306 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
     {
         using var activity = Utils.StartActivity("VoidNoParams", ActivityKind.Internal);
 
-        try
+        if (Utils.ShouldRecordData(activity))
         {
-            activity?.AddEvent(new ActivityEvent("Начало события VoidNoParams"));
+
+            try
+            {
+                activity?.AddEvent(new ActivityEvent("Начало события \"VoidNoParams\""));
+                instance.VoidNoParams();
+
+            }
+            catch (Exception ex)
+            {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.AddException(ex);
+                throw;
+            }
+            finally
+            {
+                activity?.AddEvent(new ActivityEvent("Конец события \"VoidNoParams\""));
+            }
+        }
+        else
+        {
             instance.VoidNoParams();
-
-        }
-        catch (Exception ex)
-        {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события VoidNoParams"));
         }
     }
 
-    public static void VoidWithParamsWithTrace(this IAllSignaturesMethodsGrouped instance, int id, string name)
+    public static int SyncWithReturnWithTrace(this IAllSignaturesMethodsGrouped instance)
     {
-        using var activity = Utils.StartActivity("VoidWithParams", ActivityKind.Internal);
+        using var activity = Utils.StartActivity("SyncWithReturn", ActivityKind.Internal);
 
-        activity?.SetTag("arg.id", id);
-        activity?.SetTag("arg.name", name);
-
-        try
+        if (Utils.ShouldRecordData(activity))
         {
-            activity?.AddEvent(new ActivityEvent("Начало события VoidWithParams"));
-            instance.VoidWithParams(id, name);
 
+            try
+            {
+                activity?.AddEvent(new ActivityEvent("Начало события \"SyncWithReturn\""));
+                return instance.SyncWithReturn();
+
+            }
+            catch (Exception ex)
+            {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.AddException(ex);
+                throw;
+            }
+            finally
+            {
+                activity?.AddEvent(new ActivityEvent("Конец события \"SyncWithReturn\""));
+            }
         }
-        catch (Exception ex)
+        else
         {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события VoidWithParams"));
+            return instance.SyncWithReturn();
         }
     }
 
-    public static void VoidWithDefaultsWithTrace(this IAllSignaturesMethodsGrouped instance, int retryCount = 3, int timeout = 5000)
+    public static async System.Threading.Tasks.Task AsyncTaskWithTraceAsync(this IAllSignaturesMethodsGrouped instance)
     {
-        using var activity = Utils.StartActivity("VoidWithDefaults", ActivityKind.Internal);
+        using var activity = Utils.StartActivity("AsyncTask", ActivityKind.Internal);
 
-        activity?.SetTag("arg.retryCount", retryCount);
-        activity?.SetTag("arg.timeout", timeout);
-
-        try
+        if (Utils.ShouldRecordData(activity))
         {
-            activity?.AddEvent(new ActivityEvent("Начало события VoidWithDefaults"));
-            instance.VoidWithDefaults(retryCount, timeout);
 
+            try
+            {
+                activity?.AddEvent(new ActivityEvent("Начало события \"AsyncTask\""));
+                await instance.AsyncTask();
+
+            }
+            catch (Exception ex)
+            {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.AddException(ex);
+                throw;
+            }
+            finally
+            {
+                activity?.AddEvent(new ActivityEvent("Конец события \"AsyncTask\""));
+            }
         }
-        catch (Exception ex)
+        else
         {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события VoidWithDefaults"));
+            await instance.AsyncTask();
         }
     }
 
-    public static int GetValueWithTrace(this IAllSignaturesMethodsGrouped instance)
+    public static async System.Threading.Tasks.Task<string> AsyncTaskWithResultWithTraceAsync(this IAllSignaturesMethodsGrouped instance)
     {
-        using var activity = Utils.StartActivity("GetValue", ActivityKind.Internal);
+        using var activity = Utils.StartActivity("AsyncTaskWithResult", ActivityKind.Internal);
 
-        try
+        if (Utils.ShouldRecordData(activity))
         {
-            activity?.AddEvent(new ActivityEvent("Начало события GetValue"));
-            return instance.GetValue();
 
+            try
+            {
+                activity?.AddEvent(new ActivityEvent("Начало события \"AsyncTaskWithResult\""));
+                return await instance.AsyncTaskWithResult();
+
+            }
+            catch (Exception ex)
+            {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.AddException(ex);
+                throw;
+            }
+            finally
+            {
+                activity?.AddEvent(new ActivityEvent("Конец события \"AsyncTaskWithResult\""));
+            }
         }
-        catch (Exception ex)
+        else
         {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события GetValue"));
+            return await instance.AsyncTaskWithResult();
         }
     }
 
-    public static double CalculateWithTrace(this IAllSignaturesMethodsGrouped instance, double x, double y)
+    public static async System.Threading.Tasks.ValueTask AsyncValueTaskWithTraceAsync(this IAllSignaturesMethodsGrouped instance)
     {
-        using var activity = Utils.StartActivity("Calculate", ActivityKind.Internal);
+        using var activity = Utils.StartActivity("AsyncValueTask", ActivityKind.Internal);
 
-        activity?.SetTag("arg.x", x);
-        activity?.SetTag("arg.y", y);
-
-        try
+        if (Utils.ShouldRecordData(activity))
         {
-            activity?.AddEvent(new ActivityEvent("Начало события Calculate"));
-            return instance.Calculate(x, y);
 
+            try
+            {
+                activity?.AddEvent(new ActivityEvent("Начало события \"AsyncValueTask\""));
+                await instance.AsyncValueTask();
+
+            }
+            catch (Exception ex)
+            {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.AddException(ex);
+                throw;
+            }
+            finally
+            {
+                activity?.AddEvent(new ActivityEvent("Конец события \"AsyncValueTask\""));
+            }
         }
-        catch (Exception ex)
+        else
         {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события Calculate"));
+            await instance.AsyncValueTask();
         }
     }
 
-    public static string GetConfigWithTrace(this IAllSignaturesMethodsGrouped instance, string key, string defaultValue = "default")
+    public static async System.Threading.Tasks.ValueTask<int> AsyncValueTaskWithResultWithTraceAsync(this IAllSignaturesMethodsGrouped instance)
     {
-        using var activity = Utils.StartActivity("GetConfig", ActivityKind.Internal);
+        using var activity = Utils.StartActivity("AsyncValueTaskWithResult", ActivityKind.Internal);
 
-        activity?.SetTag("arg.key", key);
-        activity?.SetTag("arg.defaultValue", defaultValue);
-
-        try
+        if (Utils.ShouldRecordData(activity))
         {
-            activity?.AddEvent(new ActivityEvent("Начало события GetConfig"));
-            return instance.GetConfig(key, defaultValue);
 
+            try
+            {
+                activity?.AddEvent(new ActivityEvent("Начало события \"AsyncValueTaskWithResult\""));
+                return await instance.AsyncValueTaskWithResult();
+
+            }
+            catch (Exception ex)
+            {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.AddException(ex);
+                throw;
+            }
+            finally
+            {
+                activity?.AddEvent(new ActivityEvent("Конец события \"AsyncValueTaskWithResult\""));
+            }
         }
-        catch (Exception ex)
+        else
         {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события GetConfig"));
+            return await instance.AsyncValueTaskWithResult();
         }
     }
 
-    public static async System.Threading.Tasks.Task AsyncTaskNoParamsWithTraceAsync(this IAllSignaturesMethodsGrouped instance)
+    public static void PrimitiveTagsWithTrace(this IAllSignaturesMethodsGrouped instance, int intVal, long longVal, double doubleVal, decimal decimalVal, bool boolVal, string stringVal, char charVal)
     {
-        using var activity = Utils.StartActivity("AsyncTaskNoParams", ActivityKind.Internal);
+        using var activity = Utils.StartActivity("PrimitiveTags", ActivityKind.Internal);
 
-        try
+        if (Utils.ShouldRecordData(activity))
         {
-            activity?.AddEvent(new ActivityEvent("Начало события AsyncTaskNoParams"));
-            await instance.AsyncTaskNoParams();
+            activity?.SetTag("tag.int", intVal);
+            activity?.SetTag("tag.long", longVal);
+            activity?.SetTag("tag.double", doubleVal);
+            activity?.SetTag("tag.decimal", decimalVal);
+            activity?.SetTag("tag.bool", boolVal);
+            activity?.SetTag("tag.string", stringVal);
+            activity?.SetTag("tag.char", charVal);
+            try
+            {
+                activity?.AddEvent(new ActivityEvent("Начало события \"PrimitiveTags\""));
+                instance.PrimitiveTags(intVal, longVal, doubleVal, decimalVal, boolVal, stringVal, charVal);
 
+            }
+            catch (Exception ex)
+            {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.AddException(ex);
+                throw;
+            }
+            finally
+            {
+                activity?.AddEvent(new ActivityEvent("Конец события \"PrimitiveTags\""));
+            }
         }
-        catch (Exception ex)
+        else
         {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события AsyncTaskNoParams"));
+            instance.PrimitiveTags(intVal, longVal, doubleVal, decimalVal, boolVal, stringVal, charVal);
         }
     }
 
-    public static async System.Threading.Tasks.Task AsyncTaskWithParamsWithTraceAsync(this IAllSignaturesMethodsGrouped instance, string userId, string action)
+    public static void PrimitiveDefaultsWithTrace(this IAllSignaturesMethodsGrouped instance, int count = 10, string name = "default", bool enabled = true)
     {
-        using var activity = Utils.StartActivity("AsyncTaskWithParams", ActivityKind.Internal);
+        using var activity = Utils.StartActivity("PrimitiveDefaults", ActivityKind.Internal);
 
-        activity?.SetTag("arg.userId", userId);
-        activity?.SetTag("arg.action", action);
-
-        try
+        if (Utils.ShouldRecordData(activity))
         {
-            activity?.AddEvent(new ActivityEvent("Начало события AsyncTaskWithParams"));
-            await instance.AsyncTaskWithParams(userId, action);
+            activity?.SetTag("tag.count", count);
+            activity?.SetTag("tag.name", name);
+            activity?.SetTag("tag.enabled", enabled);
+            try
+            {
+                activity?.AddEvent(new ActivityEvent("Начало события \"PrimitiveDefaults\""));
+                instance.PrimitiveDefaults(count, name, enabled);
 
+            }
+            catch (Exception ex)
+            {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.AddException(ex);
+                throw;
+            }
+            finally
+            {
+                activity?.AddEvent(new ActivityEvent("Конец события \"PrimitiveDefaults\""));
+            }
         }
-        catch (Exception ex)
+        else
         {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события AsyncTaskWithParams"));
+            instance.PrimitiveDefaults(count, name, enabled);
         }
     }
 
-    public static async System.Threading.Tasks.Task AsyncTaskWithCancellationWithTraceAsync(this IAllSignaturesMethodsGrouped instance, string operation, System.Threading.CancellationToken cancellationToken)
+    public static void DateTimeTagsWithTrace(this IAllSignaturesMethodsGrouped instance, DateTime date, DateTimeOffset dateOffset, DateOnly dateOnly, TimeOnly timeOnly)
     {
-        using var activity = Utils.StartActivity("AsyncTaskWithCancellation", ActivityKind.Internal);
+        using var activity = Utils.StartActivity("DateTimeTags", ActivityKind.Internal);
 
-        activity?.SetTag("arg.operation", operation);
-
-        try
+        if (Utils.ShouldRecordData(activity))
         {
-            activity?.AddEvent(new ActivityEvent("Начало события AsyncTaskWithCancellation"));
-            await instance.AsyncTaskWithCancellation(operation, cancellationToken);
+            activity?.SetTag("tag.date", date.ToString("O"));
+            activity?.SetTag("tag.dateOffset", dateOffset.ToString("O"));
+            activity?.SetTag("tag.dateOnly", dateOnly.ToString("O"));
+            activity?.SetTag("tag.timeOnly", timeOnly.ToString("O"));
+            try
+            {
+                activity?.AddEvent(new ActivityEvent("Начало события \"DateTimeTags\""));
+                instance.DateTimeTags(date, dateOffset, dateOnly, timeOnly);
 
+            }
+            catch (Exception ex)
+            {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.AddException(ex);
+                throw;
+            }
+            finally
+            {
+                activity?.AddEvent(new ActivityEvent("Конец события \"DateTimeTags\""));
+            }
         }
-        catch (Exception ex)
+        else
         {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события AsyncTaskWithCancellation"));
+            instance.DateTimeTags(date, dateOffset, dateOnly, timeOnly);
         }
     }
 
-    public static async System.Threading.Tasks.Task<string> AsyncGetDataNoParamsWithTraceAsync(this IAllSignaturesMethodsGrouped instance)
+    public static void DateTimeInWithTrace(this IAllSignaturesMethodsGrouped instance, in DateTime timestamp)
     {
-        using var activity = Utils.StartActivity("AsyncGetDataNoParams", ActivityKind.Internal);
+        using var activity = Utils.StartActivity("DateTimeIn", ActivityKind.Internal);
 
-        try
+        if (Utils.ShouldRecordData(activity))
         {
-            activity?.AddEvent(new ActivityEvent("Начало события AsyncGetDataNoParams"));
-            return await instance.AsyncGetDataNoParams();
+            activity?.SetTag("tag.timestamp", timestamp.ToString("O"));
+            try
+            {
+                activity?.AddEvent(new ActivityEvent("Начало события \"DateTimeIn\""));
+                instance.DateTimeIn(in timestamp);
 
+            }
+            catch (Exception ex)
+            {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.AddException(ex);
+                throw;
+            }
+            finally
+            {
+                activity?.AddEvent(new ActivityEvent("Конец события \"DateTimeIn\""));
+            }
         }
-        catch (Exception ex)
+        else
         {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события AsyncGetDataNoParams"));
+            instance.DateTimeIn(in timestamp);
         }
     }
 
-    public static async System.Threading.Tasks.Task<int> AsyncGetDataWithParamsWithTraceAsync(this IAllSignaturesMethodsGrouped instance, string filter, int limit)
+    public static void NullableDateTimeTagsWithTrace(this IAllSignaturesMethodsGrouped instance, DateTime? date, DateTimeOffset? dateOffset, DateOnly? dateOnly, TimeOnly? timeOnly)
     {
-        using var activity = Utils.StartActivity("AsyncGetDataWithParams", ActivityKind.Internal);
+        using var activity = Utils.StartActivity("NullableDateTimeTags", ActivityKind.Internal);
 
-        activity?.SetTag("arg.filter", filter);
-        activity?.SetTag("arg.limit", limit);
-
-        try
+        if (Utils.ShouldRecordData(activity))
         {
-            activity?.AddEvent(new ActivityEvent("Начало события AsyncGetDataWithParams"));
-            return await instance.AsyncGetDataWithParams(filter, limit);
+            activity?.SetTag("tag.date", date?.ToString("O"));
+            activity?.SetTag("tag.dateOffset", dateOffset?.ToString("O"));
+            activity?.SetTag("tag.dateOnly", dateOnly?.ToString("O"));
+            activity?.SetTag("tag.timeOnly", timeOnly?.ToString("O"));
+            try
+            {
+                activity?.AddEvent(new ActivityEvent("Начало события \"NullableDateTimeTags\""));
+                instance.NullableDateTimeTags(date, dateOffset, dateOnly, timeOnly);
 
+            }
+            catch (Exception ex)
+            {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.AddException(ex);
+                throw;
+            }
+            finally
+            {
+                activity?.AddEvent(new ActivityEvent("Конец события \"NullableDateTimeTags\""));
+            }
         }
-        catch (Exception ex)
+        else
         {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события AsyncGetDataWithParams"));
+            instance.NullableDateTimeTags(date, dateOffset, dateOnly, timeOnly);
         }
     }
 
-    public static async System.Threading.Tasks.Task<List<string>> AsyncFetchWithDefaultsWithTraceAsync(this IAllSignaturesMethodsGrouped instance, string category = "all", int maxItems = 100, System.Threading.CancellationToken cancellationToken = default)
+    public static void GuidTagsWithTrace(this IAllSignaturesMethodsGrouped instance, Guid id, Guid? correlationId)
     {
-        using var activity = Utils.StartActivity("AsyncFetchWithDefaults", ActivityKind.Internal);
+        using var activity = Utils.StartActivity("GuidTags", ActivityKind.Internal);
 
-        activity?.SetTag("arg.category", category);
-        activity?.SetTag("arg.maxItems", maxItems);
-
-        try
+        if (Utils.ShouldRecordData(activity))
         {
-            activity?.AddEvent(new ActivityEvent("Начало события AsyncFetchWithDefaults"));
-            return await instance.AsyncFetchWithDefaults(category, maxItems, cancellationToken);
+            activity?.SetTag("tag.id", id.ToString());
+            activity?.SetTag("tag.correlationId", correlationId?.ToString());
+            try
+            {
+                activity?.AddEvent(new ActivityEvent("Начало события \"GuidTags\""));
+                instance.GuidTags(id, correlationId);
 
+            }
+            catch (Exception ex)
+            {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.AddException(ex);
+                throw;
+            }
+            finally
+            {
+                activity?.AddEvent(new ActivityEvent("Конец события \"GuidTags\""));
+            }
         }
-        catch (Exception ex)
+        else
         {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события AsyncFetchWithDefaults"));
+            instance.GuidTags(id, correlationId);
         }
     }
 
-    public static async System.Threading.Tasks.ValueTask ValueTaskNoParamsWithTraceAsync(this IAllSignaturesMethodsGrouped instance)
+    public static void EnumTagsWithTrace(this IAllSignaturesMethodsGrouped instance, TraceUtils.SourceGenerator.Tests.TestData.UserKind kind, TraceUtils.SourceGenerator.Tests.TestData.UserKind? nullableKind, TraceUtils.SourceGenerator.Tests.TestData.UserKind defaultKind = TraceUtils.SourceGenerator.Tests.TestData.UserKind.Internal)
     {
-        using var activity = Utils.StartActivity("ValueTaskNoParams", ActivityKind.Internal);
+        using var activity = Utils.StartActivity("EnumTags", ActivityKind.Internal);
 
-        try
+        if (Utils.ShouldRecordData(activity))
         {
-            activity?.AddEvent(new ActivityEvent("Начало события ValueTaskNoParams"));
-            await instance.ValueTaskNoParams();
+            activity?.SetTag("tag.kind", kind);
+            activity?.SetTag("tag.nullableKind", nullableKind);
+            activity?.SetTag("tag.defaultKind", defaultKind);
+            try
+            {
+                activity?.AddEvent(new ActivityEvent("Начало события \"EnumTags\""));
+                instance.EnumTags(kind, nullableKind, defaultKind);
 
+            }
+            catch (Exception ex)
+            {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.AddException(ex);
+                throw;
+            }
+            finally
+            {
+                activity?.AddEvent(new ActivityEvent("Конец события \"EnumTags\""));
+            }
         }
-        catch (Exception ex)
+        else
         {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события ValueTaskNoParams"));
+            instance.EnumTags(kind, nullableKind, defaultKind);
         }
     }
 
-    public static async System.Threading.Tasks.ValueTask ValueTaskWithParamsWithTraceAsync(this IAllSignaturesMethodsGrouped instance, byte[] data, int offset)
+    public static void TimeSpanTagsWithTrace(this IAllSignaturesMethodsGrouped instance, TimeSpan duration, TimeSpan? timeout)
     {
-        using var activity = Utils.StartActivity("ValueTaskWithParams", ActivityKind.Internal);
+        using var activity = Utils.StartActivity("TimeSpanTags", ActivityKind.Internal);
 
-        activity?.SetTag("arg.data", System.Text.Json.JsonSerializer.Serialize(data));
-        activity?.SetTag("arg.offset", offset);
-
-        try
+        if (Utils.ShouldRecordData(activity))
         {
-            activity?.AddEvent(new ActivityEvent("Начало события ValueTaskWithParams"));
-            await instance.ValueTaskWithParams(data, offset);
+            activity?.SetTag("tag.duration", duration);
+            activity?.SetTag("tag.timeout", timeout);
+            try
+            {
+                activity?.AddEvent(new ActivityEvent("Начало события \"TimeSpanTags\""));
+                instance.TimeSpanTags(duration, timeout);
 
+            }
+            catch (Exception ex)
+            {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.AddException(ex);
+                throw;
+            }
+            finally
+            {
+                activity?.AddEvent(new ActivityEvent("Конец события \"TimeSpanTags\""));
+            }
         }
-        catch (Exception ex)
+        else
         {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события ValueTaskWithParams"));
+            instance.TimeSpanTags(duration, timeout);
         }
     }
 
-    public static async System.Threading.Tasks.ValueTask<bool> ValueTaskGetNoParamsWithTraceAsync(this IAllSignaturesMethodsGrouped instance)
+    public static void ArraySerializeWithTrace(this IAllSignaturesMethodsGrouped instance, byte[] bytes, int[] ids, string[] names)
     {
-        using var activity = Utils.StartActivity("ValueTaskGetNoParams", ActivityKind.Internal);
+        using var activity = Utils.StartActivity("ArraySerialize", ActivityKind.Internal);
 
-        try
+        if (Utils.ShouldRecordData(activity))
         {
-            activity?.AddEvent(new ActivityEvent("Начало события ValueTaskGetNoParams"));
-            return await instance.ValueTaskGetNoParams();
+            activity?.SetTag("tag.bytes", System.Text.Json.JsonSerializer.Serialize(bytes));
+            activity?.SetTag("tag.ids", System.Text.Json.JsonSerializer.Serialize(ids));
+            activity?.SetTag("tag.names", System.Text.Json.JsonSerializer.Serialize(names));
+            try
+            {
+                activity?.AddEvent(new ActivityEvent("Начало события \"ArraySerialize\""));
+                instance.ArraySerialize(bytes, ids, names);
 
+            }
+            catch (Exception ex)
+            {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.AddException(ex);
+                throw;
+            }
+            finally
+            {
+                activity?.AddEvent(new ActivityEvent("Конец события \"ArraySerialize\""));
+            }
         }
-        catch (Exception ex)
+        else
         {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события ValueTaskGetNoParams"));
+            instance.ArraySerialize(bytes, ids, names);
         }
     }
 
-    public static async System.Threading.Tasks.ValueTask<decimal> ValueTaskGetWithParamsWithTraceAsync(this IAllSignaturesMethodsGrouped instance, Guid accountId, string currency)
+    public static void ArrayNoSerializeWithTrace(this IAllSignaturesMethodsGrouped instance, byte[] bytes, int[] ids, string[] names)
     {
-        using var activity = Utils.StartActivity("ValueTaskGetWithParams", ActivityKind.Internal);
+        using var activity = Utils.StartActivity("ArrayNoSerialize", ActivityKind.Internal);
 
-        activity?.SetTag("arg.accountId", accountId);
-        activity?.SetTag("arg.currency", currency);
-
-        try
+        if (Utils.ShouldRecordData(activity))
         {
-            activity?.AddEvent(new ActivityEvent("Начало события ValueTaskGetWithParams"));
-            return await instance.ValueTaskGetWithParams(accountId, currency);
 
+            try
+            {
+                activity?.AddEvent(new ActivityEvent("Начало события \"ArrayNoSerialize\""));
+                instance.ArrayNoSerialize(bytes, ids, names);
+
+            }
+            catch (Exception ex)
+            {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.AddException(ex);
+                throw;
+            }
+            finally
+            {
+                activity?.AddEvent(new ActivityEvent("Конец события \"ArrayNoSerialize\""));
+            }
         }
-        catch (Exception ex)
+        else
         {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события ValueTaskGetWithParams"));
+            instance.ArrayNoSerialize(bytes, ids, names);
         }
     }
 
-    public static T GenericProcessWithTrace<T>(this IAllSignaturesMethodsGrouped instance, T input)
+    public static void GenericCollectionSerializeWithTrace(this IAllSignaturesMethodsGrouped instance, List<int> list, Dictionary<string, int> dict, IEnumerable<string> enumerable, IReadOnlyList<long> readonlyList)
     {
-        using var activity = Utils.StartActivity("GenericProcess", ActivityKind.Internal);
+        using var activity = Utils.StartActivity("GenericCollectionSerialize", ActivityKind.Internal);
 
-        activity?.SetTag("arg.input", System.Text.Json.JsonSerializer.Serialize(input));
-
-        try
+        if (Utils.ShouldRecordData(activity))
         {
-            activity?.AddEvent(new ActivityEvent("Начало события GenericProcess"));
-            return instance.GenericProcess<T>(input);
+            activity?.SetTag("tag.list", System.Text.Json.JsonSerializer.Serialize(list));
+            activity?.SetTag("tag.dict", System.Text.Json.JsonSerializer.Serialize(dict));
+            activity?.SetTag("tag.enumerable", System.Text.Json.JsonSerializer.Serialize(enumerable));
+            activity?.SetTag("tag.readonlyList", System.Text.Json.JsonSerializer.Serialize(readonlyList));
+            try
+            {
+                activity?.AddEvent(new ActivityEvent("Начало события \"GenericCollectionSerialize\""));
+                instance.GenericCollectionSerialize(list, dict, enumerable, readonlyList);
 
+            }
+            catch (Exception ex)
+            {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.AddException(ex);
+                throw;
+            }
+            finally
+            {
+                activity?.AddEvent(new ActivityEvent("Конец события \"GenericCollectionSerialize\""));
+            }
         }
-        catch (Exception ex)
+        else
         {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события GenericProcess"));
+            instance.GenericCollectionSerialize(list, dict, enumerable, readonlyList);
         }
     }
 
-    public static TOutput GenericTransformWithTrace<TInput, TOutput>(this IAllSignaturesMethodsGrouped instance, TInput source, Func<TInput, TOutput> converter)
+    public static void GenericCollectionNoSerializeWithTrace(this IAllSignaturesMethodsGrouped instance, List<int> list, Dictionary<string, int> dict, IEnumerable<string> enumerable)
     {
-        using var activity = Utils.StartActivity("GenericTransform", ActivityKind.Internal);
+        using var activity = Utils.StartActivity("GenericCollectionNoSerialize", ActivityKind.Internal);
 
-        activity?.SetTag("arg.source", System.Text.Json.JsonSerializer.Serialize(source));
-        activity?.SetTag("arg.converter", converter);
-
-        try
+        if (Utils.ShouldRecordData(activity))
         {
-            activity?.AddEvent(new ActivityEvent("Начало события GenericTransform"));
-            return instance.GenericTransform<TInput, TOutput>(source, converter);
 
+            try
+            {
+                activity?.AddEvent(new ActivityEvent("Начало события \"GenericCollectionNoSerialize\""));
+                instance.GenericCollectionNoSerialize(list, dict, enumerable);
+
+            }
+            catch (Exception ex)
+            {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.AddException(ex);
+                throw;
+            }
+            finally
+            {
+                activity?.AddEvent(new ActivityEvent("Конец события \"GenericCollectionNoSerialize\""));
+            }
         }
-        catch (Exception ex)
+        else
         {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события GenericTransform"));
+            instance.GenericCollectionNoSerialize(list, dict, enumerable);
         }
     }
 
-    public static void GenericWhereClassWithTrace<T>(this IAllSignaturesMethodsGrouped instance, T entity) where T : class
+    public static void ClassSerializeWithTrace(this IAllSignaturesMethodsGrouped instance, TraceUtils.SourceGenerator.Tests.TestData.ProfileDto profile, TraceUtils.SourceGenerator.Tests.TestData.ProfileDto? nullableProfile)
     {
-        using var activity = Utils.StartActivity("GenericWhereClass", ActivityKind.Internal);
+        using var activity = Utils.StartActivity("ClassSerialize", ActivityKind.Internal);
 
-        activity?.SetTag("arg.entity", System.Text.Json.JsonSerializer.Serialize(entity));
-
-        try
+        if (Utils.ShouldRecordData(activity))
         {
-            activity?.AddEvent(new ActivityEvent("Начало события GenericWhereClass"));
-            instance.GenericWhereClass<T>(entity);
+            activity?.SetTag("tag.profile", System.Text.Json.JsonSerializer.Serialize(profile));
+            activity?.SetTag("tag.nullableProfile", System.Text.Json.JsonSerializer.Serialize(nullableProfile));
+            try
+            {
+                activity?.AddEvent(new ActivityEvent("Начало события \"ClassSerialize\""));
+                instance.ClassSerialize(profile, nullableProfile);
 
+            }
+            catch (Exception ex)
+            {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.AddException(ex);
+                throw;
+            }
+            finally
+            {
+                activity?.AddEvent(new ActivityEvent("Конец события \"ClassSerialize\""));
+            }
         }
-        catch (Exception ex)
+        else
         {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события GenericWhereClass"));
+            instance.ClassSerialize(profile, nullableProfile);
         }
     }
 
-    public static T GenericWhereStructWithTrace<T>(this IAllSignaturesMethodsGrouped instance, T value) where T : struct
+    public static void ClassNoSerializeWithTrace(this IAllSignaturesMethodsGrouped instance, TraceUtils.SourceGenerator.Tests.TestData.ProfileDto profile, TraceUtils.SourceGenerator.Tests.TestData.ProfileDto? nullableProfile)
     {
-        using var activity = Utils.StartActivity("GenericWhereStruct", ActivityKind.Internal);
+        using var activity = Utils.StartActivity("ClassNoSerialize", ActivityKind.Internal);
 
-        activity?.SetTag("arg.value", System.Text.Json.JsonSerializer.Serialize(value));
-
-        try
+        if (Utils.ShouldRecordData(activity))
         {
-            activity?.AddEvent(new ActivityEvent("Начало события GenericWhereStruct"));
-            return instance.GenericWhereStruct<T>(value);
 
+            try
+            {
+                activity?.AddEvent(new ActivityEvent("Начало события \"ClassNoSerialize\""));
+                instance.ClassNoSerialize(profile, nullableProfile);
+
+            }
+            catch (Exception ex)
+            {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.AddException(ex);
+                throw;
+            }
+            finally
+            {
+                activity?.AddEvent(new ActivityEvent("Конец события \"ClassNoSerialize\""));
+            }
         }
-        catch (Exception ex)
+        else
         {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события GenericWhereStruct"));
+            instance.ClassNoSerialize(profile, nullableProfile);
         }
     }
 
-    public static T GenericWhereNewWithTrace<T>(this IAllSignaturesMethodsGrouped instance) where T : new()
+    public static void StructSerializeWithTrace(this IAllSignaturesMethodsGrouped instance, TraceUtils.SourceGenerator.Tests.TestData.CoordinatesDto coords, TraceUtils.SourceGenerator.Tests.TestData.CoordinatesDto? nullableCoords)
     {
-        using var activity = Utils.StartActivity("GenericWhereNew", ActivityKind.Internal);
+        using var activity = Utils.StartActivity("StructSerialize", ActivityKind.Internal);
 
-        try
+        if (Utils.ShouldRecordData(activity))
         {
-            activity?.AddEvent(new ActivityEvent("Начало события GenericWhereNew"));
-            return instance.GenericWhereNew<T>();
+            activity?.SetTag("tag.coords", System.Text.Json.JsonSerializer.Serialize(coords));
+            activity?.SetTag("tag.nullableCoords", System.Text.Json.JsonSerializer.Serialize(nullableCoords));
+            try
+            {
+                activity?.AddEvent(new ActivityEvent("Начало события \"StructSerialize\""));
+                instance.StructSerialize(coords, nullableCoords);
 
+            }
+            catch (Exception ex)
+            {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.AddException(ex);
+                throw;
+            }
+            finally
+            {
+                activity?.AddEvent(new ActivityEvent("Конец события \"StructSerialize\""));
+            }
         }
-        catch (Exception ex)
+        else
         {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события GenericWhereNew"));
+            instance.StructSerialize(coords, nullableCoords);
         }
     }
 
-    public static async System.Threading.Tasks.Task<int> GenericWhereInterfaceWithTraceAsync<T>(this IAllSignaturesMethodsGrouped instance, IEnumerable<T> items) where T : IComparable<T>
+    public static void StructNoSerializeWithTrace(this IAllSignaturesMethodsGrouped instance, TraceUtils.SourceGenerator.Tests.TestData.CoordinatesDto coords, TraceUtils.SourceGenerator.Tests.TestData.CoordinatesDto? nullableCoords)
     {
-        using var activity = Utils.StartActivity("GenericWhereInterface", ActivityKind.Internal);
+        using var activity = Utils.StartActivity("StructNoSerialize", ActivityKind.Internal);
 
-        activity?.SetTag("arg.items", System.Text.Json.JsonSerializer.Serialize(items));
-
-        try
+        if (Utils.ShouldRecordData(activity))
         {
-            activity?.AddEvent(new ActivityEvent("Начало события GenericWhereInterface"));
-            return await instance.GenericWhereInterface<T>(items);
 
+            try
+            {
+                activity?.AddEvent(new ActivityEvent("Начало события \"StructNoSerialize\""));
+                instance.StructNoSerialize(coords, nullableCoords);
+
+            }
+            catch (Exception ex)
+            {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.AddException(ex);
+                throw;
+            }
+            finally
+            {
+                activity?.AddEvent(new ActivityEvent("Конец события \"StructNoSerialize\""));
+            }
         }
-        catch (Exception ex)
+        else
         {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события GenericWhereInterface"));
+            instance.StructNoSerialize(coords, nullableCoords);
         }
     }
 
-    public static async System.Threading.Tasks.Task GenericMultipleConstraintsWithTraceAsync<T>(this IAllSignaturesMethodsGrouped instance, T entity, System.Threading.CancellationToken cancellationToken) where T : class, IDisposable, new()
+    public static void MixedTagsWithTrace(this IAllSignaturesMethodsGrouped instance, int id, string name, DateTime date, Guid guid, TraceUtils.SourceGenerator.Tests.TestData.UserKind kind, TraceUtils.SourceGenerator.Tests.TestData.ProfileDto profile, TraceUtils.SourceGenerator.Tests.TestData.CoordinatesDto coords, int[] ids, TraceUtils.SourceGenerator.Tests.TestData.ProfileDto skipProfile, TraceUtils.SourceGenerator.Tests.TestData.CoordinatesDto skipCoords, int[] skipIds)
     {
-        using var activity = Utils.StartActivity("GenericMultipleConstraints", ActivityKind.Internal);
+        using var activity = Utils.StartActivity("MixedTags", ActivityKind.Internal);
 
-        activity?.SetTag("arg.entity", System.Text.Json.JsonSerializer.Serialize(entity));
-
-        try
+        if (Utils.ShouldRecordData(activity))
         {
-            activity?.AddEvent(new ActivityEvent("Начало события GenericMultipleConstraints"));
-            await instance.GenericMultipleConstraints<T>(entity, cancellationToken);
+            activity?.SetTag("tag.id", id);
+            activity?.SetTag("tag.name", name);
+            activity?.SetTag("tag.date", date.ToString("O"));
+            activity?.SetTag("tag.guid", guid.ToString());
+            activity?.SetTag("tag.kind", kind);
+            activity?.SetTag("tag.profile", System.Text.Json.JsonSerializer.Serialize(profile));
+            activity?.SetTag("tag.coords", System.Text.Json.JsonSerializer.Serialize(coords));
+            activity?.SetTag("tag.ids", System.Text.Json.JsonSerializer.Serialize(ids));
+            try
+            {
+                activity?.AddEvent(new ActivityEvent("Начало события \"MixedTags\""));
+                instance.MixedTags(id, name, date, guid, kind, profile, coords, ids, skipProfile, skipCoords, skipIds);
 
+            }
+            catch (Exception ex)
+            {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.AddException(ex);
+                throw;
+            }
+            finally
+            {
+                activity?.AddEvent(new ActivityEvent("Конец события \"MixedTags\""));
+            }
         }
-        catch (Exception ex)
+        else
         {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события GenericMultipleConstraints"));
+            instance.MixedTags(id, name, date, guid, kind, profile, coords, ids, skipProfile, skipCoords, skipIds);
         }
     }
 
-    public static async System.Threading.Tasks.Task<T> GenericWithTraceAsync<T>(this IAllSignaturesMethodsGrouped instance, string id)
+    public static T GenericMethodWithTrace<T>(this IAllSignaturesMethodsGrouped instance, T input)
     {
-        using var activity = Utils.StartActivity("GenericAsync", ActivityKind.Internal);
+        using var activity = Utils.StartActivity("GenericMethod", ActivityKind.Internal);
 
-        activity?.SetTag("arg.id", id);
-
-        try
+        if (Utils.ShouldRecordData(activity))
         {
-            activity?.AddEvent(new ActivityEvent("Начало события GenericAsync"));
-            return await instance.GenericAsync<T>(id);
+            activity?.SetTag("tag.input", System.Text.Json.JsonSerializer.Serialize(input));
+            try
+            {
+                activity?.AddEvent(new ActivityEvent("Начало события \"GenericMethod\""));
+                return instance.GenericMethod<T>(input);
 
+            }
+            catch (Exception ex)
+            {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.AddException(ex);
+                throw;
+            }
+            finally
+            {
+                activity?.AddEvent(new ActivityEvent("Конец события \"GenericMethod\""));
+            }
         }
-        catch (Exception ex)
+        else
         {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события GenericAsync"));
+            return instance.GenericMethod<T>(input);
         }
     }
 
-    public static async System.Threading.Tasks.ValueTask<T> GenericAsyncValueTaskWithTraceAsync<T>(this IAllSignaturesMethodsGrouped instance, int key) where T : struct
+    public static T GenericMethodNoSerializeWithTrace<T>(this IAllSignaturesMethodsGrouped instance, T input)
     {
-        using var activity = Utils.StartActivity("GenericAsyncValueTask", ActivityKind.Internal);
+        using var activity = Utils.StartActivity("GenericMethodNoSerialize", ActivityKind.Internal);
 
-        activity?.SetTag("arg.key", key);
-
-        try
+        if (Utils.ShouldRecordData(activity))
         {
-            activity?.AddEvent(new ActivityEvent("Начало события GenericAsyncValueTask"));
-            return await instance.GenericAsyncValueTask<T>(key);
 
+            try
+            {
+                activity?.AddEvent(new ActivityEvent("Начало события \"GenericMethodNoSerialize\""));
+                return instance.GenericMethodNoSerialize<T>(input);
+
+            }
+            catch (Exception ex)
+            {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.AddException(ex);
+                throw;
+            }
+            finally
+            {
+                activity?.AddEvent(new ActivityEvent("Конец события \"GenericMethodNoSerialize\""));
+            }
         }
-        catch (Exception ex)
+        else
         {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события GenericAsyncValueTask"));
+            return instance.GenericMethodNoSerialize<T>(input);
         }
     }
 
-    public static bool MethodWithInWithTrace(this IAllSignaturesMethodsGrouped instance, in DateTime timestamp, int threshold)
+    public static void GenericWithConstraintsWithTrace<T>(this IAllSignaturesMethodsGrouped instance, T entity)
+        where T : class, new()
     {
-        using var activity = Utils.StartActivity("MethodWithIn", ActivityKind.Internal);
+        using var activity = Utils.StartActivity("GenericWithConstraints", ActivityKind.Internal);
 
-        activity?.SetTag("arg.timestamp", timestamp);
-        activity?.SetTag("arg.threshold", threshold);
-
-        try
+        if (Utils.ShouldRecordData(activity))
         {
-            activity?.AddEvent(new ActivityEvent("Начало события MethodWithIn"));
-            return instance.MethodWithIn(in timestamp, threshold);
+            activity?.SetTag("tag.entity", System.Text.Json.JsonSerializer.Serialize(entity));
+            try
+            {
+                activity?.AddEvent(new ActivityEvent("Начало события \"GenericWithConstraints\""));
+                instance.GenericWithConstraints<T>(entity);
 
+            }
+            catch (Exception ex)
+            {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.AddException(ex);
+                throw;
+            }
+            finally
+            {
+                activity?.AddEvent(new ActivityEvent("Конец события \"GenericWithConstraints\""));
+            }
         }
-        catch (Exception ex)
+        else
         {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события MethodWithIn"));
+            instance.GenericWithConstraints<T>(entity);
         }
     }
 
-    public static bool MethodWithOutWithTrace(this IAllSignaturesMethodsGrouped instance, string input, out int result)
+    public static TOutput GenericMultipleTypesWithTrace<TInput, TOutput>(this IAllSignaturesMethodsGrouped instance, TInput source)
+        where TOutput : TInput
     {
-        using var activity = Utils.StartActivity("MethodWithOut", ActivityKind.Internal);
+        using var activity = Utils.StartActivity("GenericMultipleTypes", ActivityKind.Internal);
 
-        activity?.SetTag("arg.input", input);
+        if (Utils.ShouldRecordData(activity))
+        {
+            activity?.SetTag("tag.source", System.Text.Json.JsonSerializer.Serialize(source));
+            try
+            {
+                activity?.AddEvent(new ActivityEvent("Начало события \"GenericMultipleTypes\""));
+                return instance.GenericMultipleTypes<TInput, TOutput>(source);
 
-        try
-        {
-            activity?.AddEvent(new ActivityEvent("Начало события MethodWithOut"));
-            var __traceResult = instance.MethodWithOut(input, out result);
-            activity?.SetTag("arg.result", result);
-                return __traceResult;
+            }
+            catch (Exception ex)
+            {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.AddException(ex);
+                throw;
+            }
+            finally
+            {
+                activity?.AddEvent(new ActivityEvent("Конец события \"GenericMultipleTypes\""));
+            }
         }
-        catch (Exception ex)
+        else
         {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события MethodWithOut"));
+            return instance.GenericMultipleTypes<TInput, TOutput>(source);
         }
     }
 
-    public static void MethodWithRefWithTrace(this IAllSignaturesMethodsGrouped instance, ref int counter, int increment)
+    public static void RefParametersWithTrace(this IAllSignaturesMethodsGrouped instance, in int inVal, ref int refVal, out int outVal)
     {
-        using var activity = Utils.StartActivity("MethodWithRef", ActivityKind.Internal);
+        using var activity = Utils.StartActivity("RefParameters", ActivityKind.Internal);
 
-        activity?.SetTag("arg.counter", counter);
-        activity?.SetTag("arg.increment", increment);
-
-        try
+        if (Utils.ShouldRecordData(activity))
         {
-            activity?.AddEvent(new ActivityEvent("Начало события MethodWithRef"));
-            instance.MethodWithRef(ref counter, increment);
-
+            activity?.SetTag("tag.inVal", inVal);
+            activity?.SetTag("tag.refVal", refVal);
+            try
+            {
+                activity?.AddEvent(new ActivityEvent("Начало события \"RefParameters\""));
+                instance.RefParameters(in inVal, ref refVal, out outVal);
+                activity?.SetTag("tag.outVal", outVal);
+            }
+            catch (Exception ex)
+            {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.AddException(ex);
+                throw;
+            }
+            finally
+            {
+                activity?.AddEvent(new ActivityEvent("Конец события \"RefParameters\""));
+            }
         }
-        catch (Exception ex)
+        else
         {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события MethodWithRef"));
+            instance.RefParameters(in inVal, ref refVal, out outVal);
         }
     }
 
-    public static int MethodWithParamsWithTrace(this IAllSignaturesMethodsGrouped instance, string operation, params int[] values)
+    public static void InDateTimeWithTrace(this IAllSignaturesMethodsGrouped instance, in DateTime date)
     {
-        using var activity = Utils.StartActivity("MethodWithParams", ActivityKind.Internal);
+        using var activity = Utils.StartActivity("InDateTime", ActivityKind.Internal);
 
-        activity?.SetTag("arg.operation", operation);
-        activity?.SetTag("arg.values", System.Text.Json.JsonSerializer.Serialize(values));
-
-        try
+        if (Utils.ShouldRecordData(activity))
         {
-            activity?.AddEvent(new ActivityEvent("Начало события MethodWithParams"));
-            return instance.MethodWithParams(operation, values);
+            activity?.SetTag("tag.date", date.ToString("O"));
+            try
+            {
+                activity?.AddEvent(new ActivityEvent("Начало события \"InDateTime\""));
+                instance.InDateTime(in date);
 
+            }
+            catch (Exception ex)
+            {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.AddException(ex);
+                throw;
+            }
+            finally
+            {
+                activity?.AddEvent(new ActivityEvent("Конец события \"InDateTime\""));
+            }
         }
-        catch (Exception ex)
+        else
         {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события MethodWithParams"));
+            instance.InDateTime(in date);
         }
     }
 
-    public static async System.Threading.Tasks.Task<Dictionary<string, object>> MethodWithCollectionsWithTraceAsync(this IAllSignaturesMethodsGrouped instance, IReadOnlyList<string> keys, IDictionary<string, string> options)
+    public static void InStructWithTrace(this IAllSignaturesMethodsGrouped instance, in TraceUtils.SourceGenerator.Tests.TestData.CoordinatesDto coords)
     {
-        using var activity = Utils.StartActivity("MethodWithCollections", ActivityKind.Internal);
+        using var activity = Utils.StartActivity("InStruct", ActivityKind.Internal);
 
-        activity?.SetTag("arg.keys", System.Text.Json.JsonSerializer.Serialize(keys));
-        activity?.SetTag("arg.options", System.Text.Json.JsonSerializer.Serialize(options));
-
-        try
+        if (Utils.ShouldRecordData(activity))
         {
-            activity?.AddEvent(new ActivityEvent("Начало события MethodWithCollections"));
-            return await instance.MethodWithCollections(keys, options);
+            activity?.SetTag("tag.coords", System.Text.Json.JsonSerializer.Serialize(coords));
+            try
+            {
+                activity?.AddEvent(new ActivityEvent("Начало события \"InStruct\""));
+                instance.InStruct(in coords);
 
+            }
+            catch (Exception ex)
+            {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.AddException(ex);
+                throw;
+            }
+            finally
+            {
+                activity?.AddEvent(new ActivityEvent("Конец события \"InStruct\""));
+            }
         }
-        catch (Exception ex)
+        else
         {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события MethodWithCollections"));
+            instance.InStruct(in coords);
         }
     }
 
-    public static (bool success, string message, int code) MethodReturningTupleWithTrace(this IAllSignaturesMethodsGrouped instance, string operation)
+    public static void NoTagParamsWithTrace(this IAllSignaturesMethodsGrouped instance, int noTagInt, string noTagString, int withTag)
     {
-        using var activity = Utils.StartActivity("MethodReturningTuple", ActivityKind.Internal);
+        using var activity = Utils.StartActivity("NoTagParams", ActivityKind.Internal);
 
-        activity?.SetTag("arg.operation", operation);
-
-        try
+        if (Utils.ShouldRecordData(activity))
         {
-            activity?.AddEvent(new ActivityEvent("Начало события MethodReturningTuple"));
-            return instance.MethodReturningTuple(operation);
+            activity?.SetTag("tag.withTag", withTag);
+            try
+            {
+                activity?.AddEvent(new ActivityEvent("Начало события \"NoTagParams\""));
+                instance.NoTagParams(noTagInt, noTagString, withTag);
 
+            }
+            catch (Exception ex)
+            {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.AddException(ex);
+                throw;
+            }
+            finally
+            {
+                activity?.AddEvent(new ActivityEvent("Конец события \"NoTagParams\""));
+            }
         }
-        catch (Exception ex)
+        else
         {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события MethodReturningTuple"));
+            instance.NoTagParams(noTagInt, noTagString, withTag);
         }
     }
 
-    public static async System.Threading.Tasks.Task<(int count, DateTime lastUpdate)> AsyncMethodReturningTupleWithTraceAsync(this IAllSignaturesMethodsGrouped instance, string filter)
+    public static async System.Threading.Tasks.Task CancellationOnlyWithTraceAsync(this IAllSignaturesMethodsGrouped instance, System.Threading.CancellationToken cancellationToken)
     {
-        using var activity = Utils.StartActivity("AsyncMethodReturningTuple", ActivityKind.Internal);
+        using var activity = Utils.StartActivity("CancellationOnly", ActivityKind.Internal);
 
-        activity?.SetTag("arg.filter", filter);
-
-        try
+        if (Utils.ShouldRecordData(activity))
         {
-            activity?.AddEvent(new ActivityEvent("Начало события AsyncMethodReturningTuple"));
-            return await instance.AsyncMethodReturningTuple(filter);
 
+            try
+            {
+                activity?.AddEvent(new ActivityEvent("Начало события \"CancellationOnly\""));
+                await instance.CancellationOnly(cancellationToken);
+
+            }
+            catch (Exception ex)
+            {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.AddException(ex);
+                throw;
+            }
+            finally
+            {
+                activity?.AddEvent(new ActivityEvent("Конец события \"CancellationOnly\""));
+            }
         }
-        catch (Exception ex)
+        else
         {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события AsyncMethodReturningTuple"));
+            await instance.CancellationOnly(cancellationToken);
         }
     }
 
-    public static string? MethodWithNullableWithTrace(this IAllSignaturesMethodsGrouped instance, int? id, string? fallback = null)
+    public static void ParamsArrayWithTrace(this IAllSignaturesMethodsGrouped instance, string operation, int[] values)
     {
-        using var activity = Utils.StartActivity("MethodWithNullable", ActivityKind.Internal);
+        using var activity = Utils.StartActivity("ParamsArray", ActivityKind.Internal);
 
-        activity?.SetTag("arg.id", id);
-        activity?.SetTag("arg.fallback", fallback);
-
-        try
+        if (Utils.ShouldRecordData(activity))
         {
-            activity?.AddEvent(new ActivityEvent("Начало события MethodWithNullable"));
-            return instance.MethodWithNullable(id, fallback);
+            activity?.SetTag("tag.operation", operation);
+            activity?.SetTag("tag.values", System.Text.Json.JsonSerializer.Serialize(values));
+            try
+            {
+                activity?.AddEvent(new ActivityEvent("Начало события \"ParamsArray\""));
+                instance.ParamsArray(operation, values);
 
+            }
+            catch (Exception ex)
+            {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.AddException(ex);
+                throw;
+            }
+            finally
+            {
+                activity?.AddEvent(new ActivityEvent("Конец события \"ParamsArray\""));
+            }
         }
-        catch (Exception ex)
+        else
         {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события MethodWithNullable"));
+            instance.ParamsArray(operation, values);
         }
     }
 
-    public static int MethodWithSpanWithTrace(this IAllSignaturesMethodsGrouped instance, ReadOnlySpan<byte> data, string encoding)
+    public static void ParamsArrayNoSerializeWithTrace(this IAllSignaturesMethodsGrouped instance, string operation, int[] values)
     {
-        using var activity = Utils.StartActivity("MethodWithSpan", ActivityKind.Internal);
+        using var activity = Utils.StartActivity("ParamsArrayNoSerialize", ActivityKind.Internal);
 
-        activity?.SetTag("arg.encoding", encoding);
-
-        try
+        if (Utils.ShouldRecordData(activity))
         {
-            activity?.AddEvent(new ActivityEvent("Начало события MethodWithSpan"));
-            return instance.MethodWithSpan(data, encoding);
+            activity?.SetTag("tag.operation", operation);
+            try
+            {
+                activity?.AddEvent(new ActivityEvent("Начало события \"ParamsArrayNoSerialize\""));
+                instance.ParamsArrayNoSerialize(operation, values);
 
+            }
+            catch (Exception ex)
+            {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.AddException(ex);
+                throw;
+            }
+            finally
+            {
+                activity?.AddEvent(new ActivityEvent("Конец события \"ParamsArrayNoSerialize\""));
+            }
         }
-        catch (Exception ex)
+        else
         {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события MethodWithSpan"));
+            instance.ParamsArrayNoSerialize(operation, values);
         }
     }
 
-    public static async System.Threading.Tasks.ValueTask<int> MethodWithMemoryWithTraceAsync(this IAllSignaturesMethodsGrouped instance, ReadOnlyMemory<char> buffer, System.Threading.CancellationToken cancellationToken)
+    public static (bool success, string message) TupleReturnWithTrace(this IAllSignaturesMethodsGrouped instance, string input)
     {
-        using var activity = Utils.StartActivity("MethodWithMemory", ActivityKind.Internal);
+        using var activity = Utils.StartActivity("TupleReturn", ActivityKind.Internal);
 
-        try
+        if (Utils.ShouldRecordData(activity))
         {
-            activity?.AddEvent(new ActivityEvent("Начало события MethodWithMemory"));
-            return await instance.MethodWithMemory(buffer, cancellationToken);
+            activity?.SetTag("tag.input", input);
+            try
+            {
+                activity?.AddEvent(new ActivityEvent("Начало события \"TupleReturn\""));
+                return instance.TupleReturn(input);
 
+            }
+            catch (Exception ex)
+            {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.AddException(ex);
+                throw;
+            }
+            finally
+            {
+                activity?.AddEvent(new ActivityEvent("Конец события \"TupleReturn\""));
+            }
         }
-        catch (Exception ex)
+        else
         {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события MethodWithMemory"));
+            return instance.TupleReturn(input);
         }
     }
 
-    public static async System.Threading.Tasks.Task MethodWithCallbackWithTraceAsync(this IAllSignaturesMethodsGrouped instance, string data, Action<string> onComplete, Action<Exception>? onError = default)
+    public static async System.Threading.Tasks.Task<(int count, DateTime lastUpdate)> AsyncTupleReturnWithTraceAsync(this IAllSignaturesMethodsGrouped instance, string filter)
     {
-        using var activity = Utils.StartActivity("MethodWithCallback", ActivityKind.Internal);
+        using var activity = Utils.StartActivity("AsyncTupleReturn", ActivityKind.Internal);
 
-        activity?.SetTag("arg.data", data);
-
-        try
+        if (Utils.ShouldRecordData(activity))
         {
-            activity?.AddEvent(new ActivityEvent("Начало события MethodWithCallback"));
-            await instance.MethodWithCallback(data, onComplete, onError);
+            activity?.SetTag("tag.filter", filter);
+            try
+            {
+                activity?.AddEvent(new ActivityEvent("Начало события \"AsyncTupleReturn\""));
+                return await instance.AsyncTupleReturn(filter);
 
+            }
+            catch (Exception ex)
+            {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.AddException(ex);
+                throw;
+            }
+            finally
+            {
+                activity?.AddEvent(new ActivityEvent("Конец события \"AsyncTupleReturn\""));
+            }
         }
-        catch (Exception ex)
+        else
         {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события MethodWithCallback"));
+            return await instance.AsyncTupleReturn(filter);
         }
     }
 
-    public static async System.Threading.Tasks.Task<TResult> MethodWithGenericCallbackWithTraceAsync<TInput, TResult>(this IAllSignaturesMethodsGrouped instance, TInput input, Func<TInput, System.Threading.Tasks.Task<TResult>> processor)
+    public static void NullablePrimitivesWithTrace(this IAllSignaturesMethodsGrouped instance, int? nullableInt, long? nullableLong, short? nullableShort, byte? nullableByte, bool? nullableBool, char? nullableChar, double? nullableDouble, float? nullableFloat, decimal? nullableDecimal)
     {
-        using var activity = Utils.StartActivity("MethodWithGenericCallback", ActivityKind.Internal);
+        using var activity = Utils.StartActivity("NullablePrimitives", ActivityKind.Internal);
 
-        activity?.SetTag("arg.input", System.Text.Json.JsonSerializer.Serialize(input));
-
-        try
+        if (Utils.ShouldRecordData(activity))
         {
-            activity?.AddEvent(new ActivityEvent("Начало события MethodWithGenericCallback"));
-            return await instance.MethodWithGenericCallback<TInput, TResult>(input, processor);
+            activity?.SetTag("tag.int", nullableInt);
+            activity?.SetTag("tag.long", nullableLong);
+            activity?.SetTag("tag.short", nullableShort);
+            activity?.SetTag("tag.byte", nullableByte);
+            activity?.SetTag("tag.bool", nullableBool);
+            activity?.SetTag("tag.char", nullableChar);
+            activity?.SetTag("tag.double", nullableDouble);
+            activity?.SetTag("tag.float", nullableFloat);
+            activity?.SetTag("tag.decimal", nullableDecimal);
+            try
+            {
+                activity?.AddEvent(new ActivityEvent("Начало события \"NullablePrimitives\""));
+                instance.NullablePrimitives(nullableInt, nullableLong, nullableShort, nullableByte, nullableBool, nullableChar, nullableDouble, nullableFloat, nullableDecimal);
 
+            }
+            catch (Exception ex)
+            {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.AddException(ex);
+                throw;
+            }
+            finally
+            {
+                activity?.AddEvent(new ActivityEvent("Конец события \"NullablePrimitives\""));
+            }
         }
-        catch (Exception ex)
+        else
         {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события MethodWithGenericCallback"));
+            instance.NullablePrimitives(nullableInt, nullableLong, nullableShort, nullableByte, nullableBool, nullableChar, nullableDouble, nullableFloat, nullableDecimal);
         }
     }
 
-    public static IEnumerable<TOutput> CovariantMethodWithTrace<TInput, TOutput>(this IAllSignaturesMethodsGrouped instance, IEnumerable<TInput> items) where TOutput : TInput
+    public static void NullableTimeSpanWithTrace(this IAllSignaturesMethodsGrouped instance, TimeSpan? duration)
     {
-        using var activity = Utils.StartActivity("CovariantMethod", ActivityKind.Internal);
+        using var activity = Utils.StartActivity("NullableTimeSpan", ActivityKind.Internal);
 
-        activity?.SetTag("arg.items", System.Text.Json.JsonSerializer.Serialize(items));
-
-        try
+        if (Utils.ShouldRecordData(activity))
         {
-            activity?.AddEvent(new ActivityEvent("Начало события CovariantMethod"));
-            return instance.CovariantMethod<TInput, TOutput>(items);
+            activity?.SetTag("tag.duration", duration);
+            try
+            {
+                activity?.AddEvent(new ActivityEvent("Начало события \"NullableTimeSpan\""));
+                instance.NullableTimeSpan(duration);
 
+            }
+            catch (Exception ex)
+            {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.AddException(ex);
+                throw;
+            }
+            finally
+            {
+                activity?.AddEvent(new ActivityEvent("Конец события \"NullableTimeSpan\""));
+            }
         }
-        catch (Exception ex)
+        else
         {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события CovariantMethod"));
+            instance.NullableTimeSpan(duration);
         }
     }
 
-    public static void ContravariantMethodWithTrace<T>(this IAllSignaturesMethodsGrouped instance, Action<T> handler, T data)
+    public static async System.Threading.Tasks.Task<string> ClientActivityWithTraceAsync(this IAllSignaturesMethodsGrouped instance, string url, string method)
     {
-        using var activity = Utils.StartActivity("ContravariantMethod", ActivityKind.Internal);
+        using var activity = Utils.StartActivity("UnknownOperation", ActivityKind.Internal);
 
-        activity?.SetTag("arg.handler", handler);
-        activity?.SetTag("arg.data", System.Text.Json.JsonSerializer.Serialize(data));
-
-        try
+        if (Utils.ShouldRecordData(activity))
         {
-            activity?.AddEvent(new ActivityEvent("Начало события ContravariantMethod"));
-            instance.ContravariantMethod<T>(handler, data);
+            activity?.SetTag("tag.url", url);
+            activity?.SetTag("tag.method", method);
+            try
+            {
+                activity?.AddEvent(new ActivityEvent("Начало события \"UnknownOperation\""));
+                return await instance.ClientActivity(url, method);
 
+            }
+            catch (Exception ex)
+            {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.AddException(ex);
+                throw;
+            }
+            finally
+            {
+                activity?.AddEvent(new ActivityEvent("Конец события \"UnknownOperation\""));
+            }
         }
-        catch (Exception ex)
+        else
         {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события ContravariantMethod"));
+            return await instance.ClientActivity(url, method);
         }
     }
 
-    public static void MethodWithEnumWithTrace(this IAllSignaturesMethodsGrouped instance, long userId, TraceUtils.SourceGenerator.Tests.TestData.UserKind userKind)
+    public static async System.Threading.Tasks.Task WithDelegatesWithTraceAsync(this IAllSignaturesMethodsGrouped instance, string data, Action<string> callback, Func<string, System.Threading.Tasks.Task<int>>? asyncCallback = null)
     {
-        using var activity = Utils.StartActivity("MethodWithEnum", ActivityKind.Internal);
+        using var activity = Utils.StartActivity("WithDelegates", ActivityKind.Internal);
 
-        activity?.SetTag("arg.userId", userId);
-        activity?.SetTag("arg.userKind", userKind);
-
-        try
+        if (Utils.ShouldRecordData(activity))
         {
-            activity?.AddEvent(new ActivityEvent("Начало события MethodWithEnum"));
-            instance.MethodWithEnum(userId, userKind);
+            activity?.SetTag("tag.data", data);
+            try
+            {
+                activity?.AddEvent(new ActivityEvent("Начало события \"WithDelegates\""));
+                await instance.WithDelegates(data, callback, asyncCallback);
 
+            }
+            catch (Exception ex)
+            {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.AddException(ex);
+                throw;
+            }
+            finally
+            {
+                activity?.AddEvent(new ActivityEvent("Конец события \"WithDelegates\""));
+            }
         }
-        catch (Exception ex)
+        else
         {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события MethodWithEnum"));
+            await instance.WithDelegates(data, callback, asyncCallback);
         }
     }
 
-    public static TraceUtils.SourceGenerator.Tests.TestData.UserKind MethodReturningEnumWithTrace(this IAllSignaturesMethodsGrouped instance, string email)
+    public static async System.Threading.Tasks.Task CustomTypeCollectionsWithTraceAsync(this IAllSignaturesMethodsGrouped instance, List<TraceUtils.SourceGenerator.Tests.TestData.ProfileDto> profiles, IReadOnlyList<TraceUtils.SourceGenerator.Tests.TestData.CoordinatesDto> coordsList, Dictionary<TraceUtils.SourceGenerator.Tests.TestData.UserKind, TraceUtils.SourceGenerator.Tests.TestData.ProfileDto> kindDict)
     {
-        using var activity = Utils.StartActivity("MethodReturningEnum", ActivityKind.Internal);
+        using var activity = Utils.StartActivity("CustomTypeCollections", ActivityKind.Internal);
 
-        activity?.SetTag("arg.email", email);
-
-        try
+        if (Utils.ShouldRecordData(activity))
         {
-            activity?.AddEvent(new ActivityEvent("Начало события MethodReturningEnum"));
-            return instance.MethodReturningEnum(email);
+            activity?.SetTag("tag.profiles", System.Text.Json.JsonSerializer.Serialize(profiles));
+            activity?.SetTag("tag.coordsList", System.Text.Json.JsonSerializer.Serialize(coordsList));
+            activity?.SetTag("tag.kindDict", System.Text.Json.JsonSerializer.Serialize(kindDict));
+            try
+            {
+                activity?.AddEvent(new ActivityEvent("Начало события \"CustomTypeCollections\""));
+                await instance.CustomTypeCollections(profiles, coordsList, kindDict);
 
+            }
+            catch (Exception ex)
+            {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.AddException(ex);
+                throw;
+            }
+            finally
+            {
+                activity?.AddEvent(new ActivityEvent("Конец события \"CustomTypeCollections\""));
+            }
         }
-        catch (Exception ex)
+        else
         {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события MethodReturningEnum"));
+            await instance.CustomTypeCollections(profiles, coordsList, kindDict);
         }
     }
 
-    public static async System.Threading.Tasks.Task<int> AsyncMethodWithEnumDefaultWithTraceAsync(this IAllSignaturesMethodsGrouped instance, TraceUtils.SourceGenerator.Tests.TestData.UserKind kind = TraceUtils.SourceGenerator.Tests.TestData.UserKind.Unknown, System.Threading.CancellationToken cancellationToken = default)
+    public static async System.Threading.Tasks.Task CustomTypeCollectionsNoSerializeWithTraceAsync(this IAllSignaturesMethodsGrouped instance, List<TraceUtils.SourceGenerator.Tests.TestData.ProfileDto> profiles, IReadOnlyList<TraceUtils.SourceGenerator.Tests.TestData.CoordinatesDto> coordsList)
     {
-        using var activity = Utils.StartActivity("AsyncMethodWithEnumDefault", ActivityKind.Internal);
+        using var activity = Utils.StartActivity("CustomTypeCollectionsNoSerialize", ActivityKind.Internal);
 
-        activity?.SetTag("arg.kind", kind);
-
-        try
+        if (Utils.ShouldRecordData(activity))
         {
-            activity?.AddEvent(new ActivityEvent("Начало события AsyncMethodWithEnumDefault"));
-            return await instance.AsyncMethodWithEnumDefault(kind, cancellationToken);
 
+            try
+            {
+                activity?.AddEvent(new ActivityEvent("Начало события \"CustomTypeCollectionsNoSerialize\""));
+                await instance.CustomTypeCollectionsNoSerialize(profiles, coordsList);
+
+            }
+            catch (Exception ex)
+            {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.AddException(ex);
+                throw;
+            }
+            finally
+            {
+                activity?.AddEvent(new ActivityEvent("Конец события \"CustomTypeCollectionsNoSerialize\""));
+            }
         }
-        catch (Exception ex)
+        else
         {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события AsyncMethodWithEnumDefault"));
-        }
-    }
-
-    public static bool MethodWithNullableEnumWithTrace(this IAllSignaturesMethodsGrouped instance, TraceUtils.SourceGenerator.Tests.TestData.UserKind? kind, TraceUtils.SourceGenerator.Tests.TestData.UserKind fallbackKind = TraceUtils.SourceGenerator.Tests.TestData.UserKind.Internal)
-    {
-        using var activity = Utils.StartActivity("MethodWithNullableEnum", ActivityKind.Internal);
-
-        activity?.SetTag("arg.kind", kind);
-        activity?.SetTag("arg.fallbackKind", fallbackKind);
-
-        try
-        {
-            activity?.AddEvent(new ActivityEvent("Начало события MethodWithNullableEnum"));
-            return instance.MethodWithNullableEnum(kind, fallbackKind);
-
-        }
-        catch (Exception ex)
-        {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события MethodWithNullableEnum"));
-        }
-    }
-
-    public static void MethodWithClassDtoWithTrace(this IAllSignaturesMethodsGrouped instance, TraceUtils.SourceGenerator.Tests.TestData.ProfileDto profile)
-    {
-        using var activity = Utils.StartActivity("MethodWithClassDto", ActivityKind.Internal);
-
-        activity?.SetTag("arg.profile.ProfileId", profile.ProfileId);
-        activity?.SetTag("arg.profile.Email", profile.Email);
-
-        try
-        {
-            activity?.AddEvent(new ActivityEvent("Начало события MethodWithClassDto"));
-            instance.MethodWithClassDto(profile);
-
-        }
-        catch (Exception ex)
-        {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события MethodWithClassDto"));
-        }
-    }
-
-    public static TraceUtils.SourceGenerator.Tests.TestData.ProfileDto MethodReturningClassDtoWithTrace(this IAllSignaturesMethodsGrouped instance, long profileId)
-    {
-        using var activity = Utils.StartActivity("MethodReturningClassDto", ActivityKind.Internal);
-
-        activity?.SetTag("arg.profileId", profileId);
-
-        try
-        {
-            activity?.AddEvent(new ActivityEvent("Начало события MethodReturningClassDto"));
-            return instance.MethodReturningClassDto(profileId);
-
-        }
-        catch (Exception ex)
-        {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события MethodReturningClassDto"));
-        }
-    }
-
-    public static async System.Threading.Tasks.Task<bool> AsyncMethodWithNullableClassDtoWithTraceAsync(this IAllSignaturesMethodsGrouped instance, TraceUtils.SourceGenerator.Tests.TestData.ProfileDto? profile, System.Threading.CancellationToken cancellationToken = default)
-    {
-        using var activity = Utils.StartActivity("AsyncMethodWithNullableClassDto", ActivityKind.Internal);
-
-        activity?.SetTag("arg.profile.ProfileId", profile?.ProfileId);
-        activity?.SetTag("arg.profile.Email", profile?.Email);
-
-        try
-        {
-            activity?.AddEvent(new ActivityEvent("Начало события AsyncMethodWithNullableClassDto"));
-            return await instance.AsyncMethodWithNullableClassDto(profile, cancellationToken);
-
-        }
-        catch (Exception ex)
-        {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события AsyncMethodWithNullableClassDto"));
-        }
-    }
-
-    public static async System.Threading.Tasks.Task<TraceUtils.SourceGenerator.Tests.TestData.ProfileDto?> AsyncMethodReturningNullableClassDtoWithTraceAsync(this IAllSignaturesMethodsGrouped instance, string? email)
-    {
-        using var activity = Utils.StartActivity("AsyncMethodReturningNullableClassDto", ActivityKind.Internal);
-
-        activity?.SetTag("arg.email", email);
-
-        try
-        {
-            activity?.AddEvent(new ActivityEvent("Начало события AsyncMethodReturningNullableClassDto"));
-            return await instance.AsyncMethodReturningNullableClassDto(email);
-
-        }
-        catch (Exception ex)
-        {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события AsyncMethodReturningNullableClassDto"));
-        }
-    }
-
-    public static async System.Threading.Tasks.Task<List<TraceUtils.SourceGenerator.Tests.TestData.ProfileDto>> MethodWithClassDtoCollectionWithTraceAsync(this IAllSignaturesMethodsGrouped instance, IEnumerable<long> profileIds, TraceUtils.SourceGenerator.Tests.TestData.UserKind kind)
-    {
-        using var activity = Utils.StartActivity("MethodWithClassDtoCollection", ActivityKind.Internal);
-
-        activity?.SetTag("arg.profileIds", System.Text.Json.JsonSerializer.Serialize(profileIds));
-        activity?.SetTag("arg.kind", kind);
-
-        try
-        {
-            activity?.AddEvent(new ActivityEvent("Начало события MethodWithClassDtoCollection"));
-            return await instance.MethodWithClassDtoCollection(profileIds, kind);
-
-        }
-        catch (Exception ex)
-        {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события MethodWithClassDtoCollection"));
-        }
-    }
-
-    public static double MethodWithReadonlyStructWithTrace(this IAllSignaturesMethodsGrouped instance, TraceUtils.SourceGenerator.Tests.TestData.CoordinatesDto coordinates)
-    {
-        using var activity = Utils.StartActivity("MethodWithReadonlyStruct", ActivityKind.Internal);
-
-        activity?.SetTag("arg.coordinates.Lat", coordinates.Lat);
-        activity?.SetTag("arg.coordinates.Lon", coordinates.Lon);
-
-        try
-        {
-            activity?.AddEvent(new ActivityEvent("Начало события MethodWithReadonlyStruct"));
-            return instance.MethodWithReadonlyStruct(coordinates);
-
-        }
-        catch (Exception ex)
-        {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события MethodWithReadonlyStruct"));
-        }
-    }
-
-    public static TraceUtils.SourceGenerator.Tests.TestData.CoordinatesDto MethodReturningReadonlyStructWithTrace(this IAllSignaturesMethodsGrouped instance, double lat, double lon)
-    {
-        using var activity = Utils.StartActivity("MethodReturningReadonlyStruct", ActivityKind.Internal);
-
-        activity?.SetTag("arg.lat", lat);
-        activity?.SetTag("arg.lon", lon);
-
-        try
-        {
-            activity?.AddEvent(new ActivityEvent("Начало события MethodReturningReadonlyStruct"));
-            return instance.MethodReturningReadonlyStruct(lat, lon);
-
-        }
-        catch (Exception ex)
-        {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события MethodReturningReadonlyStruct"));
-        }
-    }
-
-    public static bool MethodWithInReadonlyStructWithTrace(this IAllSignaturesMethodsGrouped instance, in TraceUtils.SourceGenerator.Tests.TestData.CoordinatesDto coordinates, double maxDistance)
-    {
-        using var activity = Utils.StartActivity("MethodWithInReadonlyStruct", ActivityKind.Internal);
-
-        activity?.SetTag("arg.maxDistance", maxDistance);
-
-        try
-        {
-            activity?.AddEvent(new ActivityEvent("Начало события MethodWithInReadonlyStruct"));
-            return instance.MethodWithInReadonlyStruct(in coordinates, maxDistance);
-
-        }
-        catch (Exception ex)
-        {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события MethodWithInReadonlyStruct"));
-        }
-    }
-
-    public static async System.Threading.Tasks.Task<string> AsyncMethodWithReadonlyStructWithTraceAsync(this IAllSignaturesMethodsGrouped instance, TraceUtils.SourceGenerator.Tests.TestData.CoordinatesDto coordinates, System.Threading.CancellationToken cancellationToken = default)
-    {
-        using var activity = Utils.StartActivity("AsyncMethodWithReadonlyStruct", ActivityKind.Internal);
-
-        activity?.SetTag("arg.coordinates.Lat", coordinates.Lat);
-        activity?.SetTag("arg.coordinates.Lon", coordinates.Lon);
-
-        try
-        {
-            activity?.AddEvent(new ActivityEvent("Начало события AsyncMethodWithReadonlyStruct"));
-            return await instance.AsyncMethodWithReadonlyStruct(coordinates, cancellationToken);
-
-        }
-        catch (Exception ex)
-        {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события AsyncMethodWithReadonlyStruct"));
-        }
-    }
-
-    public static async System.Threading.Tasks.ValueTask<TraceUtils.SourceGenerator.Tests.TestData.CoordinatesDto> ValueTaskMethodReturningReadonlyStructWithTraceAsync(this IAllSignaturesMethodsGrouped instance, int locationId)
-    {
-        using var activity = Utils.StartActivity("ValueTaskMethodReturningReadonlyStruct", ActivityKind.Internal);
-
-        activity?.SetTag("arg.locationId", locationId);
-
-        try
-        {
-            activity?.AddEvent(new ActivityEvent("Начало события ValueTaskMethodReturningReadonlyStruct"));
-            return await instance.ValueTaskMethodReturningReadonlyStruct(locationId);
-
-        }
-        catch (Exception ex)
-        {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события ValueTaskMethodReturningReadonlyStruct"));
-        }
-    }
-
-    public static TraceUtils.SourceGenerator.Tests.TestData.CoordinatesDto? MethodWithNullableReadonlyStructWithTrace(this IAllSignaturesMethodsGrouped instance, int? locationId)
-    {
-        using var activity = Utils.StartActivity("MethodWithNullableReadonlyStruct", ActivityKind.Internal);
-
-        activity?.SetTag("arg.locationId", locationId);
-
-        try
-        {
-            activity?.AddEvent(new ActivityEvent("Начало события MethodWithNullableReadonlyStruct"));
-            return instance.MethodWithNullableReadonlyStruct(locationId);
-
-        }
-        catch (Exception ex)
-        {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события MethodWithNullableReadonlyStruct"));
-        }
-    }
-
-    public static async System.Threading.Tasks.Task<TraceUtils.SourceGenerator.Tests.TestData.ProfileDto?> MethodCombiningCustomTypesWithTraceAsync(this IAllSignaturesMethodsGrouped instance, TraceUtils.SourceGenerator.Tests.TestData.UserKind kind, TraceUtils.SourceGenerator.Tests.TestData.CoordinatesDto coordinates, double radius)
-    {
-        using var activity = Utils.StartActivity("MethodCombiningCustomTypes", ActivityKind.Internal);
-
-        activity?.SetTag("arg.kind", kind);
-        activity?.SetTag("arg.coordinates.Lat", coordinates.Lat);
-        activity?.SetTag("arg.coordinates.Lon", coordinates.Lon);
-        activity?.SetTag("arg.radius", radius);
-
-        try
-        {
-            activity?.AddEvent(new ActivityEvent("Начало события MethodCombiningCustomTypes"));
-            return await instance.MethodCombiningCustomTypes(kind, coordinates, radius);
-
-        }
-        catch (Exception ex)
-        {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события MethodCombiningCustomTypes"));
-        }
-    }
-
-    public static async System.Threading.Tasks.Task<(TraceUtils.SourceGenerator.Tests.TestData.ProfileDto profile, TraceUtils.SourceGenerator.Tests.TestData.CoordinatesDto location, TraceUtils.SourceGenerator.Tests.TestData.UserKind kind)> MethodReturningTupleWithCustomTypesWithTraceAsync(this IAllSignaturesMethodsGrouped instance, long profileId)
-    {
-        using var activity = Utils.StartActivity("MethodReturningTupleWithCustomTypes", ActivityKind.Internal);
-
-        activity?.SetTag("arg.profileId", profileId);
-
-        try
-        {
-            activity?.AddEvent(new ActivityEvent("Начало события MethodReturningTupleWithCustomTypes"));
-            return await instance.MethodReturningTupleWithCustomTypes(profileId);
-
-        }
-        catch (Exception ex)
-        {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события MethodReturningTupleWithCustomTypes"));
-        }
-    }
-
-    public static TEnum GenericMethodWhereEnumWithTrace<TEnum>(this IAllSignaturesMethodsGrouped instance, string value) where TEnum : struct, Enum
-    {
-        using var activity = Utils.StartActivity("GenericMethodWhereEnum", ActivityKind.Internal);
-
-        activity?.SetTag("arg.value", value);
-
-        try
-        {
-            activity?.AddEvent(new ActivityEvent("Начало события GenericMethodWhereEnum"));
-            return instance.GenericMethodWhereEnum<TEnum>(value);
-
-        }
-        catch (Exception ex)
-        {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события GenericMethodWhereEnum"));
-        }
-    }
-
-    public static bool MethodWithOutReadonlyStructWithTrace(this IAllSignaturesMethodsGrouped instance, string address, out TraceUtils.SourceGenerator.Tests.TestData.CoordinatesDto coordinates)
-    {
-        using var activity = Utils.StartActivity("MethodWithOutReadonlyStruct", ActivityKind.Internal);
-
-        activity?.SetTag("arg.address", address);
-
-        try
-        {
-            activity?.AddEvent(new ActivityEvent("Начало события MethodWithOutReadonlyStruct"));
-            return instance.MethodWithOutReadonlyStruct(address, out coordinates);
-
-        }
-        catch (Exception ex)
-        {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события MethodWithOutReadonlyStruct"));
-        }
-    }
-
-    public static async System.Threading.Tasks.Task<double> MethodWithReadonlyStructCollectionWithTraceAsync(this IAllSignaturesMethodsGrouped instance, IReadOnlyList<TraceUtils.SourceGenerator.Tests.TestData.CoordinatesDto> coordinates)
-    {
-        using var activity = Utils.StartActivity("MethodWithReadonlyStructCollection", ActivityKind.Internal);
-
-        activity?.SetTag("arg.coordinates", System.Text.Json.JsonSerializer.Serialize(coordinates));
-
-        try
-        {
-            activity?.AddEvent(new ActivityEvent("Начало события MethodWithReadonlyStructCollection"));
-            return await instance.MethodWithReadonlyStructCollection(coordinates);
-
-        }
-        catch (Exception ex)
-        {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события MethodWithReadonlyStructCollection"));
-        }
-    }
-
-    public static async System.Threading.Tasks.Task<Dictionary<TraceUtils.SourceGenerator.Tests.TestData.UserKind, List<TraceUtils.SourceGenerator.Tests.TestData.ProfileDto>>> MethodWithCustomTypesDictionaryWithTraceAsync(this IAllSignaturesMethodsGrouped instance, TraceUtils.SourceGenerator.Tests.TestData.CoordinatesDto? centerPoint = default, double radiusKm = 10D)
-    {
-        using var activity = Utils.StartActivity("MethodWithCustomTypesDictionary", ActivityKind.Internal);
-
-        activity?.SetTag("arg.filter.Lat", centerPoint?.Lat);
-        activity?.SetTag("arg.filter.Lon", centerPoint?.Lon);
-        activity?.SetTag("arg.radiusKm", radiusKm);
-
-        try
-        {
-            activity?.AddEvent(new ActivityEvent("Начало события MethodWithCustomTypesDictionary"));
-            return await instance.MethodWithCustomTypesDictionary(centerPoint, radiusKm);
-
-        }
-        catch (Exception ex)
-        {
-            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-            activity?.AddException(ex);
-            throw;
-        }
-        finally
-        {
-            activity?.AddEvent(new ActivityEvent("Конец события MethodWithCustomTypesDictionary"));
+            await instance.CustomTypeCollectionsNoSerialize(profiles, coordsList);
         }
     }
 

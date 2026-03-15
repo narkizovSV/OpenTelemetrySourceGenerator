@@ -5,6 +5,11 @@
 	<ImplicitUsings>enable</ImplicitUsings>
 	<Nullable>enable</Nullable>
 	<LangVersion>latest</LangVersion>
+
+	<PackageId>TraceUtils</PackageId>
+	<Version>0.0.2</Version>
+	<Authors>SergeyNarkizov</Authors>
+	<PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>

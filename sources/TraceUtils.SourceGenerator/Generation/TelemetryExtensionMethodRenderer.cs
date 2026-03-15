@@ -1,188 +1,460 @@
-using System.Collections.Immutable;
+﻿using Microsoft.CodeAnalysis;
 using System.Text;
 using TraceUtils.SourceGenerator.Models;
 
-namespace TraceUtils.SourceGenerator.Generation;
+namespace TraceUtils.SourceGenerator.Infrastructure;
 
 /// <summary>
-/// Формирует текст тела extension-метода на основе собранной сигнатуры.
+/// Генерирует тело extension-метода с телеметрией.
 /// </summary>
 internal static class TelemetryExtensionMethodRenderer
 {
-    public static string GenerateExtensionMethodBody(MethodSignatureInfo methodInfo)
+    private static readonly SymbolDisplayFormat TypeFormat =
+        new SymbolDisplayFormat(
+            globalNamespaceStyle: SymbolDisplayGlobalNamespaceStyle.Omitted,
+            typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
+            genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters,
+            miscellaneousOptions:
+                SymbolDisplayMiscellaneousOptions.EscapeKeywordIdentifiers |
+                SymbolDisplayMiscellaneousOptions.IncludeNullableReferenceTypeModifier |
+                SymbolDisplayMiscellaneousOptions.UseSpecialTypes);
+
+    public static string GenerateExtensionMethodBody(MethodContextInfo context)
     {
-        var genericParams = methodInfo.IsGeneric && methodInfo.GenericTypeParameters.Length > 0
-            ? "<" + string.Join(", ", methodInfo.GenericTypeParameters) + ">"
-            : string.Empty;
-
-        var parameters = string.Join(", ", methodInfo.Parameters.Select(BuildParameterDeclaration));
-        var parametersWithComma = methodInfo.Parameters.Any()
-            ? ", " + parameters
-            : string.Empty;
-
-        var isTaskLike =
-            methodInfo.ReturnType.Contains("System.Threading.Tasks.Task", StringComparison.Ordinal) ||
-            methodInfo.ReturnType.Contains("Task", StringComparison.Ordinal) ||
-            methodInfo.ReturnType.Contains("global::System.Threading.Tasks.Task", StringComparison.Ordinal) ||
-            methodInfo.ReturnType.Contains("System.Threading.Tasks.ValueTask", StringComparison.Ordinal) ||
-            methodInfo.ReturnType.Contains("ValueTask", StringComparison.Ordinal) ||
-            methodInfo.ReturnType.Contains("global::System.Threading.Tasks.ValueTask", StringComparison.Ordinal);
-
-        var asyncKeyword = isTaskLike ? "async " : string.Empty;
-        var awaitKeyword = isTaskLike ? "await " : string.Empty;
-        var generatedMethodName = BuildGeneratedMethodName(methodInfo.MethodName, isTaskLike);
-
-        var preCallTagLines = new List<string>();
-        var postCallTagLines = new List<string>();
-        foreach (var param in methodInfo.Parameters.Where(p => p.HasTracerProperty))
-        {
-            foreach (var tagInfo in param.TagInfos)
-            {
-                var tagValueExpression = tagInfo.ShouldSerializeValue
-                    ? $"System.Text.Json.JsonSerializer.Serialize({tagInfo.ValueExpression})"
-                    : tagInfo.ValueExpression;
-
-                var tagLine = $"activity?.SetTag(\"{tagInfo.TagName}\", {tagValueExpression});";
-                if (string.Equals(param.Modifier, "out", StringComparison.Ordinal))
-                {
-                    postCallTagLines.Add(tagLine);
-                }
-                else
-                {
-                    preCallTagLines.Add(tagLine);
-                }
-            }
-        }
-        var hasPostCallTags = postCallTagLines.Count > 0;
-
-        var callExpression =
-            $"instance.{methodInfo.MethodName}{genericParams}({string.Join(", ", methodInfo.Parameters.Select(BuildArgumentExpression))})";
-        var returnValueVariableName = BuildReturnValueVariableName(methodInfo.Parameters);
-
-        string callStatement;
-        var isNonGenericTaskLike = methodInfo.ReturnType == "System.Threading.Tasks.Task" ||
-                                   methodInfo.ReturnType == "Task" ||
-                                   methodInfo.ReturnType == "global::System.Threading.Tasks.Task" ||
-                                   methodInfo.ReturnType == "System.Threading.Tasks.ValueTask" ||
-                                   methodInfo.ReturnType == "ValueTask" ||
-                                   methodInfo.ReturnType == "global::System.Threading.Tasks.ValueTask";
-
-        if (isTaskLike && isNonGenericTaskLike)
-        {
-            callStatement = $"{awaitKeyword}{callExpression};";
-        }
-        else if (isTaskLike)
-        {
-            callStatement = hasPostCallTags
-                ? $"var {returnValueVariableName} = {awaitKeyword}{callExpression};"
-                : $"return {awaitKeyword}{callExpression};";
-        }
-        else if (methodInfo.ReturnType == "void")
-        {
-            callStatement = $"{callExpression};";
-        }
-        else
-        {
-            callStatement = hasPostCallTags
-                ? $"var {returnValueVariableName} = {callExpression};"
-                : $"return {callExpression};";
-        }
-
-        if (hasPostCallTags && (methodInfo.ReturnType != "void" && !isNonGenericTaskLike))
-        {
-            postCallTagLines.Add($"return {returnValueVariableName};");
-        }
-
-        var preCallTagsBlock = BuildTagBlock(preCallTagLines, 8);
-        var postCallTagsBlock = BuildTagBlock(postCallTagLines, 16);
-
-        var genericConstraints = string.IsNullOrEmpty(methodInfo.GenericConstraints)
-            ? string.Empty
-            : methodInfo.GenericConstraints;
+        var methodSymbol = context.MethodSymbol;
+        var signature = BuildExtensionSignature(methodSymbol, context.ContainingTypeName);
+        var call = BuildMethodCall(methodSymbol);
+        var preCallTags = BuildPreCallTags(methodSymbol);
+        var postCallTags = BuildPostCallTags(methodSymbol);
 
         return TelemetryGenerationConstants.ExtensionMethodTemplate
-            .Replace("{{Async}}", asyncKeyword)
-            .Replace("{{ReturnType}}", methodInfo.ReturnType.Replace("global::", string.Empty))
-            .Replace("{{GeneratedMethodName}}", generatedMethodName)
-            .Replace("{{GenericParams}}", genericParams)
-            .Replace("{{ContainingType}}", methodInfo.ContainingType)
-            .Replace("{{ParametersWithComma}}", parametersWithComma)
-            .Replace("{{GenericConstraints}}", genericConstraints)
-            .Replace("{{OperationName}}", methodInfo.OperationName)
-            .Replace("{{PreCallTags}}", preCallTagsBlock)
-            .Replace("{{PostCallTags}}", postCallTagsBlock)
-            .Replace("{{Call}}", callStatement)
-            .Replace("global::", string.Empty);
+            .Replace("{{signature}}", signature)
+            .Replace("{{OperationName}}", context.OperationName)
+            .Replace("{{ActivityType}}", context.ActivityType)
+            .Replace("{{PreCallTags}}", preCallTags)
+            .Replace("{{Call}}", call)
+            .Replace("{{PostCallTags}}", postCallTags);
     }
 
-    private static string BuildParameterDeclaration(ParameterInfo parameter)
+    private static string BuildExtensionSignature(IMethodSymbol methodSymbol, string containingTypeName)
     {
-        var prefix = new StringBuilder();
-        if (parameter.IsParams)
-            prefix.Append("params ");
-        if (!string.IsNullOrEmpty(parameter.Modifier))
-            prefix.Append(parameter.Modifier).Append(' ');
+        var sb = new StringBuilder();
 
-        var defaultValue = parameter.HasDefaultValue
-            ? $" = {parameter.DefaultValueExpression ?? "default"}"
-            : string.Empty;
+        sb.Append("public static ");
 
-        return $"{prefix}{parameter.Type} {parameter.Name}{defaultValue}";
-    }
-
-    private static string BuildArgumentExpression(ParameterInfo parameter)
-    {
-        return string.IsNullOrEmpty(parameter.Modifier)
-            ? parameter.Name
-            : $"{parameter.Modifier} {parameter.Name}";
-    }
-
-    private static string BuildReturnValueVariableName(ImmutableArray<ParameterInfo> parameters)
-    {
-        const string baseName = "__traceResult";
-        var usedNames = new HashSet<string>(parameters.Select(p => p.Name), StringComparer.Ordinal);
-
-        if (!usedNames.Contains(baseName))
-            return baseName;
-
-        var index = 1;
-        while (usedNames.Contains($"{baseName}{index}"))
-            index++;
-
-        return $"{baseName}{index}";
-    }
-
-    private static string BuildTagBlock(IReadOnlyList<string> lines, int subsequentIndentSize)
-    {
-        if (lines.Count == 0)
-            return string.Empty;
-
-        var builder = new StringBuilder();
-        builder.Append(lines[0]);
-
-        if (lines.Count == 1)
-            return builder.ToString();
-
-        var subsequentIndent = new string(' ', subsequentIndentSize);
-        for (var i = 1; i < lines.Count; i++)
+        if (IsAsyncMethod(methodSymbol))
         {
-            builder.Append('\n');
-            builder.Append(subsequentIndent);
-            builder.Append(lines[i]);
+            sb.Append("async ");
         }
 
-        return builder.ToString();
+        var returnType = methodSymbol.ReturnType.ToDisplayString(TypeFormat);
+        sb.Append(returnType);
+        sb.Append(' ');
+
+        var methodName = methodSymbol.Name + GetTraceSuffix(methodSymbol);
+        if (methodSymbol.IsGenericMethod && methodSymbol.TypeParameters.Length > 0)
+        {
+            var typeParams = string.Join(", ", methodSymbol.TypeParameters.Select(tp => tp.Name));
+            methodName += $"<{typeParams}>";
+        }
+
+        sb.Append(methodName);
+        sb.Append('(');
+
+        sb.Append("this ");
+        sb.Append(containingTypeName);
+        sb.Append(" instance");
+
+        foreach (var param in methodSymbol.Parameters)
+        {
+            sb.Append(", ");
+
+            var refKind = param.RefKind switch
+            {
+                RefKind.Ref => "ref ",
+                RefKind.Out => "out ",
+                RefKind.In => "in ",
+                _ => ""
+            };
+
+            sb.Append(refKind);
+            sb.Append(param.Type.ToDisplayString(TypeFormat));
+            sb.Append(' ');
+            sb.Append(param.Name);
+
+            if (param.HasExplicitDefaultValue)
+            {
+                sb.Append(" = ");
+                sb.Append(FormatDefaultValue(param));
+            }
+        }
+
+        sb.Append(')');
+
+        if (methodSymbol.IsGenericMethod && methodSymbol.TypeParameters.Length > 0)
+        {
+            var constraints = BuildConstraints(methodSymbol.TypeParameters);
+            if (!string.IsNullOrEmpty(constraints))
+            {
+                sb.AppendLine();
+                sb.Append("        ");
+                sb.Append(constraints);
+            }
+        }
+
+        return sb.ToString();
     }
 
-    private static string BuildGeneratedMethodName(string originalMethodName, bool isTaskLike)
+    private static bool IsAsyncMethod(IMethodSymbol methodSymbol)
     {
-        if (!isTaskLike)
-            return $"{originalMethodName}WithTrace";
-
-        var baseName = originalMethodName.EndsWith("Async", StringComparison.Ordinal)
-            ? originalMethodName.Substring(0, originalMethodName.Length - "Async".Length)
-            : originalMethodName;
-
-        return $"{baseName}WithTraceAsync";
+        var returnType = methodSymbol.ReturnType.ToDisplayString();
+        return returnType.StartsWith("System.Threading.Tasks.Task") ||
+               returnType.StartsWith("System.Threading.Tasks.ValueTask");
     }
+
+    private static string GetTraceSuffix(IMethodSymbol methodSymbol)
+    {
+        return IsAsyncMethod(methodSymbol) ? "WithTraceAsync" : "WithTrace";
+    }
+
+    private static string FormatDefaultValue(IParameterSymbol param)
+    {
+        if (param.ExplicitDefaultValue is null)
+        {
+            if (param.Type.IsValueType && !param.Type.ToDisplayString().EndsWith("?"))
+            {
+                return "default";
+            }
+            return "null";
+        }
+
+        if (param.ExplicitDefaultValue is string str)
+            return $"\"{str}\"";
+
+        if (param.ExplicitDefaultValue is bool b)
+            return b ? "true" : "false";
+
+        var paramType = param.Type is INamedTypeSymbol nts && nts.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T
+            ? nts.TypeArguments[0]
+            : param.Type;
+        if (paramType.TypeKind == TypeKind.Enum && param.ExplicitDefaultValue is not null)
+        {
+            var enumType = (INamedTypeSymbol)paramType;
+            var rawValue = param.ExplicitDefaultValue;
+            long valueLong = rawValue switch
+            {
+                int i => i,
+                long l => l,
+                byte by => by,
+                sbyte sb => sb,
+                short s => s,
+                ushort us => us,
+                uint u => u,
+                ulong ul => (long)ul,
+                _ => -1
+            };
+            foreach (var member in enumType.GetMembers().OfType<IFieldSymbol>())
+            {
+                if (!member.IsConst || member.ConstantValue is null) continue;
+                long memberLong = member.ConstantValue switch
+                {
+                    int i => i,
+                    long l => l,
+                    byte by => by,
+                    sbyte sb => sb,
+                    short s => s,
+                    ushort us => us,
+                    uint u => u,
+                    ulong ul => (long)ul,
+                    _ => -1
+                };
+                if (memberLong == valueLong)
+                {
+                    var typeName = enumType.ToDisplayString(TypeFormat);
+                    return $"{typeName}.{member.Name}";
+                }
+            }
+            var enumTypeName = enumType.ToDisplayString(TypeFormat);
+            return $"({enumTypeName}){rawValue}";
+        }
+
+        return param.ExplicitDefaultValue!.ToString();
+    }
+
+    private static string BuildConstraints(System.Collections.Immutable.ImmutableArray<ITypeParameterSymbol> typeParameters)
+    {
+        var sb = new StringBuilder();
+
+        foreach (var tp in typeParameters)
+        {
+            var constraintParts = new List<string>();
+
+            if (tp.HasReferenceTypeConstraint)
+                constraintParts.Add("class");
+            if (tp.HasValueTypeConstraint)
+                constraintParts.Add("struct");
+            if (tp.HasUnmanagedTypeConstraint)
+                constraintParts.Add("unmanaged");
+            if (tp.HasNotNullConstraint)
+                constraintParts.Add("notnull");
+
+            foreach (var t in tp.ConstraintTypes)
+            {
+                constraintParts.Add(t.ToDisplayString(TypeFormat));
+            }
+
+            if (tp.HasConstructorConstraint)
+                constraintParts.Add("new()");
+
+            if (constraintParts.Count == 0)
+                continue;
+
+            if (sb.Length > 0)
+                sb.Append(" ");
+
+            sb.Append("where ")
+              .Append(tp.Name)
+              .Append(" : ")
+              .Append(string.Join(", ", constraintParts));
+        }
+
+        return sb.ToString();
+    }
+
+    private static string BuildMethodCall(IMethodSymbol methodSymbol)
+    {
+        var sb = new StringBuilder();
+        var isAsync = IsAsyncMethod(methodSymbol);
+        var returnType = methodSymbol.ReturnType.ToDisplayString();
+        var hasReturnValue = !methodSymbol.ReturnsVoid &&
+            returnType != "System.Threading.Tasks.Task" &&
+            returnType != "System.Threading.Tasks.ValueTask";
+
+        if (hasReturnValue)
+        {
+            sb.Append("return ");
+        }
+
+        if (isAsync)
+        {
+            sb.Append("await ");
+        }
+
+        sb.Append("instance.");
+        sb.Append(methodSymbol.Name);
+
+        if (methodSymbol.IsGenericMethod && methodSymbol.TypeParameters.Length > 0)
+        {
+            var typeParams = string.Join(", ", methodSymbol.TypeParameters.Select(tp => tp.Name));
+            sb.Append($"<{typeParams}>");
+        }
+
+        sb.Append('(');
+
+        var paramCalls = methodSymbol.Parameters.Select(p =>
+        {
+            var refKind = p.RefKind switch
+            {
+                RefKind.Ref => "ref ",
+                RefKind.Out => "out ",
+                RefKind.In => "in ",
+                _ => ""
+            };
+            return $"{refKind}{p.Name}";
+        });
+
+        sb.Append(string.Join(", ", paramCalls));
+        sb.Append(");");
+
+        return sb.ToString();
+    }
+
+    private static readonly string PreCallTagIndent = new string(' ', 12);
+
+    private static string BuildPreCallTags(IMethodSymbol methodSymbol)
+    {
+        var sb = new StringBuilder();
+        var first = true;
+
+        foreach (var parameter in methodSymbol.Parameters)
+        {
+            if (parameter.RefKind == RefKind.Out)
+                continue;
+
+            var tagInfo = ExtractTagInfo(parameter);
+            if (tagInfo == null)
+                continue;
+
+            var (tagName, shouldSerialize) = tagInfo.Value;
+            var tagValue = GetTagValueExpression(parameter, shouldSerialize);
+
+            if (tagValue == null)
+                continue;
+
+            if (!first)
+                sb.Append('\n').Append(PreCallTagIndent);
+            sb.Append($"activity?.SetTag(\"{tagName}\", {tagValue});");
+            first = false;
+        }
+
+        return sb.ToString().TrimEnd();
+    }
+
+    private static string BuildPostCallTags(IMethodSymbol methodSymbol)
+    {
+        var sb = new StringBuilder();
+
+        foreach (var parameter in methodSymbol.Parameters)
+        {
+            if (parameter.RefKind != RefKind.Out)
+                continue;
+
+            var tagInfo = ExtractTagInfo(parameter);
+            if (tagInfo == null)
+                continue;
+
+            var (tagName, shouldSerialize) = tagInfo.Value;
+            var tagValue = GetTagValueExpression(parameter, shouldSerialize);
+            if (tagValue == null)
+                continue;
+
+            if (sb.Length > 0)
+                sb.Append('\n').Append(PreCallTagIndent);
+            sb.Append($"activity?.SetTag(\"{tagName}\", {tagValue});");
+        }
+
+        return sb.ToString();
+    }
+
+    private static (string TagName, bool ShouldSerialize)? ExtractTagInfo(IParameterSymbol parameter)
+    {
+        foreach (var attr in parameter.GetAttributes())
+        {
+            if (attr.AttributeClass?.ToDisplayString() == TelemetryGenerationConstants.SpanTagAttributeName)
+            {
+                var tagName = attr.ConstructorArguments.Length > 0
+                    ? attr.ConstructorArguments[0].Value?.ToString() ?? parameter.Name
+                    : parameter.Name;
+
+                var shouldSerialize = attr.ConstructorArguments.Length > 1
+                    && attr.ConstructorArguments[1].Value is bool serialize
+                        ? serialize
+                        : true;
+
+                return (tagName, shouldSerialize);
+            }
+        }
+
+        return null;
+    }
+
+    private static string? GetTagValueExpression(IParameterSymbol parameter, bool shouldSerialize)
+    {
+        var parameterType = parameter.Type;
+        var isNullable = IsNullableType(parameterType);
+        var nullableAccess = isNullable ? "?" : "";
+
+        if (IsDateTimeType(parameterType))
+        {
+            return $"{parameter.Name}{nullableAccess}.ToString(\"O\")";
+        }
+
+        if (IsGuidType(parameterType))
+        {
+            return $"{parameter.Name}{nullableAccess}.ToString()";
+        }
+
+        if (IsPrimitiveType(parameterType))
+        {
+            return parameter.Name;
+        }
+
+        if (IsArrayOrGenericType(parameterType))
+        {
+            return shouldSerialize
+                ? $"System.Text.Json.JsonSerializer.Serialize({parameter.Name})"
+                : null;
+        }
+
+        if (shouldSerialize)
+        {
+            return $"System.Text.Json.JsonSerializer.Serialize({parameter.Name})";
+        }
+
+        return null;
+    }
+
+    private static bool IsNullableType(ITypeSymbol typeSymbol)
+    {
+        return typeSymbol is INamedTypeSymbol namedType &&
+               namedType.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T;
+    }
+
+    private static bool IsGuidType(ITypeSymbol typeSymbol)
+    {
+        var actualType = GetUnderlyingType(typeSymbol);
+        return actualType.Name == "Guid";
+    }
+
+    private static bool IsArrayOrGenericType(ITypeSymbol typeSymbol)
+    {
+        if (typeSymbol is IArrayTypeSymbol)
+            return true;
+
+        if (typeSymbol is INamedTypeSymbol namedType && namedType.IsGenericType)
+            return true;
+
+        return false;
+    }
+
+    private static bool IsPrimitiveType(ITypeSymbol typeSymbol)
+    {
+        var actualType = GetUnderlyingType(typeSymbol);
+
+        if (actualType.SpecialType is
+            SpecialType.System_Boolean or
+            SpecialType.System_Byte or
+            SpecialType.System_SByte or
+            SpecialType.System_Char or
+            SpecialType.System_Int16 or
+            SpecialType.System_UInt16 or
+            SpecialType.System_Int32 or
+            SpecialType.System_UInt32 or
+            SpecialType.System_Int64 or
+            SpecialType.System_UInt64 or
+            SpecialType.System_Single or
+            SpecialType.System_Double or
+            SpecialType.System_Decimal or
+            SpecialType.System_String)
+        {
+            return true;
+        }
+
+        if (actualType.TypeKind == TypeKind.Enum)
+            return true;
+
+        return actualType.Name == "TimeSpan";
+    }
+
+    private static bool IsDateTimeType(ITypeSymbol typeSymbol)
+    {
+        var actualType = GetUnderlyingType(typeSymbol);
+
+        if (actualType.SpecialType == SpecialType.System_DateTime)
+            return true;
+
+        var typeName = actualType.Name;
+        return typeName is "DateTime" or "DateTimeOffset" or "DateOnly" or "TimeOnly";
+    }
+
+    private static ITypeSymbol GetUnderlyingType(ITypeSymbol typeSymbol)
+    {
+        if (typeSymbol is INamedTypeSymbol namedType &&
+            namedType.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T)
+        {
+            return namedType.TypeArguments[0];
+        }
+        return typeSymbol;
+    }
+
 }

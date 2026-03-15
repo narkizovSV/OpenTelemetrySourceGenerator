@@ -1,10 +1,10 @@
-namespace TraceUtils.Attributes;
+namespace TraceUtils;
 
 /// <summary>
 /// 
 /// </summary>
 [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
-public sealed class TracerPropertyAttribute : Attribute
+public class SpanTagAttribute : Attribute
 {
     /// <summary>
     /// 
@@ -14,10 +14,17 @@ public sealed class TracerPropertyAttribute : Attribute
     /// <summary>
     /// 
     /// </summary>
+    public bool ShouldSerialize { get; }
+
+    /// <summary>
+    /// 
+    /// </summary>
     /// <param name="tagName"></param>
+    /// <param name="shouldSerialize"></param>
     /// <exception cref="ArgumentNullException"></exception>
-    public TracerPropertyAttribute(string tagName)
+    public SpanTagAttribute(string tagName, bool shouldSerialize = false)
     {
         TagName = tagName ?? throw new ArgumentNullException(nameof(tagName));
+        ShouldSerialize = shouldSerialize;
     }
 }

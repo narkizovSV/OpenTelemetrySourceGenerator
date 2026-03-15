@@ -1,18 +1,24 @@
-namespace TraceUtils.Attributes;
+namespace TraceUtils;
 
 /// <summary>
 /// 
 /// </summary>
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-public sealed class TracerEventAttribute : Attribute
+public class ActivityOperationAttribute : Attribute
 {
     /// <summary>
     /// 
     /// </summary>
     public string OperationName { get; }
 
-    public TracerEventAttribute(string operationName)
+    /// <summary>
+    /// 
+    /// </summary>
+    public ActivityType ActivityType { get; }
+
+    public ActivityOperationAttribute(string operationName, ActivityType activityType)
     {
         OperationName = operationName ?? throw new ArgumentNullException(nameof(operationName));
+        ActivityType = activityType;
     }
 }
