@@ -8,10 +8,12 @@ namespace TraceUtils;
 /// </summary>
 public static class Utils
 {
+    private static readonly string ResolvedServiceName = ResolveServiceName();
+
     /// <summary>
     /// Имя сервиса
     /// </summary>
-    public static string ServiceName => Assembly.GetEntryAssembly()?.EntryPoint?.DeclaringType?.Namespace ?? "DefaultProjectName";
+    public static string ServiceName => ResolvedServiceName;
 
     /// <summary>
     /// Версия сервиса
@@ -23,6 +25,30 @@ public static class Utils
     /// </summary>
     public static readonly ActivitySource ActivitySource =
         new(ServiceName, ServiceVersion);
+
+    private static string ResolveServiceName()
+    {
+        var entryAssembly = Assembly.GetEntryAssembly();
+        var assemblyName = entryAssembly?.GetName().Name;
+        if (!string.IsNullOrWhiteSpace(assemblyName))
+        {
+            return assemblyName!;
+        }
+
+        var entryNamespace = entryAssembly?.EntryPoint?.DeclaringType?.Namespace;
+        if (!string.IsNullOrWhiteSpace(entryNamespace))
+        {
+            return entryNamespace!;
+        }
+
+        var friendlyName = AppDomain.CurrentDomain.FriendlyName;
+        if (!string.IsNullOrWhiteSpace(friendlyName))
+        {
+            return friendlyName;
+        }
+
+        return "DefaultProjectName";
+    }
 
     /// <summary>
     /// Создать новый дочерний span (Activity) с указанным именем

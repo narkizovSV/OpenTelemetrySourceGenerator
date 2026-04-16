@@ -27,6 +27,15 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             catch (Exception ex)
             {
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("exception.message", ex.Message);
+                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                if (ex.InnerException is not null)
+                {
+                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                }
+                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"VoidNoParams\""));
                 activity?.AddException(ex);
                 throw;
             }
@@ -57,6 +66,15 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             catch (Exception ex)
             {
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("exception.message", ex.Message);
+                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                if (ex.InnerException is not null)
+                {
+                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                }
+                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"SyncWithReturn\""));
                 activity?.AddException(ex);
                 throw;
             }
@@ -87,6 +105,15 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             catch (Exception ex)
             {
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("exception.message", ex.Message);
+                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                if (ex.InnerException is not null)
+                {
+                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                }
+                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"AsyncTask\""));
                 activity?.AddException(ex);
                 throw;
             }
@@ -117,6 +144,15 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             catch (Exception ex)
             {
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("exception.message", ex.Message);
+                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                if (ex.InnerException is not null)
+                {
+                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                }
+                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"AsyncTaskWithResult\""));
                 activity?.AddException(ex);
                 throw;
             }
@@ -147,6 +183,15 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             catch (Exception ex)
             {
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("exception.message", ex.Message);
+                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                if (ex.InnerException is not null)
+                {
+                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                }
+                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"AsyncValueTask\""));
                 activity?.AddException(ex);
                 throw;
             }
@@ -177,6 +222,15 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             catch (Exception ex)
             {
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("exception.message", ex.Message);
+                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                if (ex.InnerException is not null)
+                {
+                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                }
+                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"AsyncValueTaskWithResult\""));
                 activity?.AddException(ex);
                 throw;
             }
@@ -213,6 +267,15 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             catch (Exception ex)
             {
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("exception.message", ex.Message);
+                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                if (ex.InnerException is not null)
+                {
+                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                }
+                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"PrimitiveTags\""));
                 activity?.AddException(ex);
                 throw;
             }
@@ -245,6 +308,15 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             catch (Exception ex)
             {
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("exception.message", ex.Message);
+                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                if (ex.InnerException is not null)
+                {
+                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                }
+                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"PrimitiveDefaults\""));
                 activity?.AddException(ex);
                 throw;
             }
@@ -278,6 +350,15 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             catch (Exception ex)
             {
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("exception.message", ex.Message);
+                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                if (ex.InnerException is not null)
+                {
+                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                }
+                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"DateTimeTags\""));
                 activity?.AddException(ex);
                 throw;
             }
@@ -308,6 +389,15 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             catch (Exception ex)
             {
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("exception.message", ex.Message);
+                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                if (ex.InnerException is not null)
+                {
+                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                }
+                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"DateTimeIn\""));
                 activity?.AddException(ex);
                 throw;
             }
@@ -341,6 +431,15 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             catch (Exception ex)
             {
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("exception.message", ex.Message);
+                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                if (ex.InnerException is not null)
+                {
+                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                }
+                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"NullableDateTimeTags\""));
                 activity?.AddException(ex);
                 throw;
             }
@@ -372,6 +471,15 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             catch (Exception ex)
             {
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("exception.message", ex.Message);
+                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                if (ex.InnerException is not null)
+                {
+                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                }
+                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"GuidTags\""));
                 activity?.AddException(ex);
                 throw;
             }
@@ -404,6 +512,15 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             catch (Exception ex)
             {
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("exception.message", ex.Message);
+                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                if (ex.InnerException is not null)
+                {
+                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                }
+                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"EnumTags\""));
                 activity?.AddException(ex);
                 throw;
             }
@@ -435,6 +552,15 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             catch (Exception ex)
             {
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("exception.message", ex.Message);
+                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                if (ex.InnerException is not null)
+                {
+                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                }
+                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"TimeSpanTags\""));
                 activity?.AddException(ex);
                 throw;
             }
@@ -467,6 +593,15 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             catch (Exception ex)
             {
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("exception.message", ex.Message);
+                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                if (ex.InnerException is not null)
+                {
+                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                }
+                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"ArraySerialize\""));
                 activity?.AddException(ex);
                 throw;
             }
@@ -497,6 +632,15 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             catch (Exception ex)
             {
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("exception.message", ex.Message);
+                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                if (ex.InnerException is not null)
+                {
+                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                }
+                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"ArrayNoSerialize\""));
                 activity?.AddException(ex);
                 throw;
             }
@@ -530,6 +674,15 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             catch (Exception ex)
             {
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("exception.message", ex.Message);
+                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                if (ex.InnerException is not null)
+                {
+                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                }
+                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"GenericCollectionSerialize\""));
                 activity?.AddException(ex);
                 throw;
             }
@@ -560,6 +713,15 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             catch (Exception ex)
             {
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("exception.message", ex.Message);
+                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                if (ex.InnerException is not null)
+                {
+                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                }
+                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"GenericCollectionNoSerialize\""));
                 activity?.AddException(ex);
                 throw;
             }
@@ -591,6 +753,15 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             catch (Exception ex)
             {
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("exception.message", ex.Message);
+                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                if (ex.InnerException is not null)
+                {
+                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                }
+                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"ClassSerialize\""));
                 activity?.AddException(ex);
                 throw;
             }
@@ -621,6 +792,15 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             catch (Exception ex)
             {
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("exception.message", ex.Message);
+                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                if (ex.InnerException is not null)
+                {
+                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                }
+                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"ClassNoSerialize\""));
                 activity?.AddException(ex);
                 throw;
             }
@@ -652,6 +832,15 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             catch (Exception ex)
             {
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("exception.message", ex.Message);
+                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                if (ex.InnerException is not null)
+                {
+                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                }
+                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"StructSerialize\""));
                 activity?.AddException(ex);
                 throw;
             }
@@ -682,6 +871,15 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             catch (Exception ex)
             {
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("exception.message", ex.Message);
+                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                if (ex.InnerException is not null)
+                {
+                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                }
+                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"StructNoSerialize\""));
                 activity?.AddException(ex);
                 throw;
             }
@@ -719,6 +917,15 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             catch (Exception ex)
             {
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("exception.message", ex.Message);
+                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                if (ex.InnerException is not null)
+                {
+                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                }
+                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"MixedTags\""));
                 activity?.AddException(ex);
                 throw;
             }
@@ -749,6 +956,15 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             catch (Exception ex)
             {
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("exception.message", ex.Message);
+                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                if (ex.InnerException is not null)
+                {
+                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                }
+                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"GenericMethod\""));
                 activity?.AddException(ex);
                 throw;
             }
@@ -779,6 +995,15 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             catch (Exception ex)
             {
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("exception.message", ex.Message);
+                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                if (ex.InnerException is not null)
+                {
+                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                }
+                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"GenericMethodNoSerialize\""));
                 activity?.AddException(ex);
                 throw;
             }
@@ -810,6 +1035,15 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             catch (Exception ex)
             {
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("exception.message", ex.Message);
+                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                if (ex.InnerException is not null)
+                {
+                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                }
+                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"GenericWithConstraints\""));
                 activity?.AddException(ex);
                 throw;
             }
@@ -841,6 +1075,15 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             catch (Exception ex)
             {
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("exception.message", ex.Message);
+                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                if (ex.InnerException is not null)
+                {
+                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                }
+                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"GenericMultipleTypes\""));
                 activity?.AddException(ex);
                 throw;
             }
@@ -872,6 +1115,15 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             catch (Exception ex)
             {
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("exception.message", ex.Message);
+                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                if (ex.InnerException is not null)
+                {
+                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                }
+                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"RefParameters\""));
                 activity?.AddException(ex);
                 throw;
             }
@@ -902,6 +1154,15 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             catch (Exception ex)
             {
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("exception.message", ex.Message);
+                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                if (ex.InnerException is not null)
+                {
+                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                }
+                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"InDateTime\""));
                 activity?.AddException(ex);
                 throw;
             }
@@ -932,6 +1193,15 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             catch (Exception ex)
             {
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("exception.message", ex.Message);
+                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                if (ex.InnerException is not null)
+                {
+                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                }
+                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"InStruct\""));
                 activity?.AddException(ex);
                 throw;
             }
@@ -962,6 +1232,15 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             catch (Exception ex)
             {
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("exception.message", ex.Message);
+                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                if (ex.InnerException is not null)
+                {
+                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                }
+                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"NoTagParams\""));
                 activity?.AddException(ex);
                 throw;
             }
@@ -992,6 +1271,15 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             catch (Exception ex)
             {
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("exception.message", ex.Message);
+                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                if (ex.InnerException is not null)
+                {
+                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                }
+                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"CancellationOnly\""));
                 activity?.AddException(ex);
                 throw;
             }
@@ -1023,6 +1311,15 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             catch (Exception ex)
             {
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("exception.message", ex.Message);
+                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                if (ex.InnerException is not null)
+                {
+                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                }
+                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"ParamsArray\""));
                 activity?.AddException(ex);
                 throw;
             }
@@ -1053,6 +1350,15 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             catch (Exception ex)
             {
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("exception.message", ex.Message);
+                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                if (ex.InnerException is not null)
+                {
+                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                }
+                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"ParamsArrayNoSerialize\""));
                 activity?.AddException(ex);
                 throw;
             }
@@ -1083,6 +1389,15 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             catch (Exception ex)
             {
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("exception.message", ex.Message);
+                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                if (ex.InnerException is not null)
+                {
+                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                }
+                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"TupleReturn\""));
                 activity?.AddException(ex);
                 throw;
             }
@@ -1113,6 +1428,15 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             catch (Exception ex)
             {
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("exception.message", ex.Message);
+                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                if (ex.InnerException is not null)
+                {
+                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                }
+                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"AsyncTupleReturn\""));
                 activity?.AddException(ex);
                 throw;
             }
@@ -1151,6 +1475,15 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             catch (Exception ex)
             {
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("exception.message", ex.Message);
+                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                if (ex.InnerException is not null)
+                {
+                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                }
+                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"NullablePrimitives\""));
                 activity?.AddException(ex);
                 throw;
             }
@@ -1181,6 +1514,15 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             catch (Exception ex)
             {
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("exception.message", ex.Message);
+                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                if (ex.InnerException is not null)
+                {
+                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                }
+                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"NullableTimeSpan\""));
                 activity?.AddException(ex);
                 throw;
             }
@@ -1212,6 +1554,15 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             catch (Exception ex)
             {
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("exception.message", ex.Message);
+                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                if (ex.InnerException is not null)
+                {
+                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                }
+                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"UnknownOperation\""));
                 activity?.AddException(ex);
                 throw;
             }
@@ -1242,6 +1593,15 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             catch (Exception ex)
             {
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("exception.message", ex.Message);
+                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                if (ex.InnerException is not null)
+                {
+                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                }
+                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"WithDelegates\""));
                 activity?.AddException(ex);
                 throw;
             }
@@ -1274,6 +1634,15 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             catch (Exception ex)
             {
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("exception.message", ex.Message);
+                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                if (ex.InnerException is not null)
+                {
+                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                }
+                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"CustomTypeCollections\""));
                 activity?.AddException(ex);
                 throw;
             }
@@ -1304,6 +1673,15 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             catch (Exception ex)
             {
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("exception.message", ex.Message);
+                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                if (ex.InnerException is not null)
+                {
+                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                }
+                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"CustomTypeCollectionsNoSerialize\""));
                 activity?.AddException(ex);
                 throw;
             }

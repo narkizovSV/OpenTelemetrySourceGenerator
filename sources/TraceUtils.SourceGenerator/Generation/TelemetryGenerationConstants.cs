@@ -56,6 +56,15 @@ internal static class TelemetryGenerationConstants
                 catch (Exception ex)
                 {
                     activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                    activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
+                    activity?.SetTag("exception.message", ex.Message);
+                    activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                    if (ex.InnerException is not null)
+                    {
+                        activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                        activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                    }
+                    activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"{{OperationName}}\""));
                     activity?.AddException(ex);
                     throw;
                 }
