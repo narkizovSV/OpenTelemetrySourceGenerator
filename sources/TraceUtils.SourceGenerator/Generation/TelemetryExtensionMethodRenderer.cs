@@ -51,7 +51,7 @@ internal static class TelemetryExtensionMethodRenderer
         sb.Append(returnType);
         sb.Append(' ');
 
-        var methodName = methodSymbol.Name + GetTraceSuffix(methodSymbol);
+        var methodName = BuildGeneratedMethodName(methodSymbol);
         if (methodSymbol.IsGenericMethod && methodSymbol.TypeParameters.Length > 0)
         {
             var typeParams = string.Join(", ", methodSymbol.TypeParameters.Select(tp => tp.Name));
@@ -115,6 +115,24 @@ internal static class TelemetryExtensionMethodRenderer
     private static string GetTraceSuffix(IMethodSymbol methodSymbol)
     {
         return IsAsyncMethod(methodSymbol) ? "WithTraceAsync" : "WithTrace";
+    }
+
+    private static string BuildGeneratedMethodName(IMethodSymbol methodSymbol)
+    {
+        var methodName = methodSymbol.Name;
+        if (!IsAsyncMethod(methodSymbol))
+        {
+            return methodName + GetTraceSuffix(methodSymbol);
+        }
+
+        // Keep a single Async marker only at the end: <Name>WithTraceAsync.
+        var normalizedMethodName = methodName.Replace("Async", string.Empty);
+        if (string.IsNullOrWhiteSpace(normalizedMethodName))
+        {
+            normalizedMethodName = methodName;
+        }
+
+        return normalizedMethodName + GetTraceSuffix(methodSymbol);
     }
 
     private static string FormatDefaultValue(IParameterSymbol param)
