@@ -16,18 +16,21 @@ internal static class TelemetryMethodSignatureTransformer
         var containingNamespace = methodSymbol.ContainingNamespace.ToDisplayString();
         var containingTypeName = methodSymbol.ContainingType.Name;
 
-        var (operationName, activityType) = ExtractOperationInfo(attrSyntaxContext.Attributes);
+        var (operationName, activityType, inputParametersName, outputParametersName, recordOutputData) = ExtractOperationInfo(attrSyntaxContext.Attributes);
 
         return new MethodContextInfo(
             MethodSymbol: methodSymbol,
             ContainingNamespace: containingNamespace,
             ContainingTypeName: containingTypeName,
             OperationName: operationName,
-            ActivityType: activityType
+            ActivityType: activityType,
+            InputParametersName: inputParametersName,
+            OutputParametersName: outputParametersName,
+            RecordOutputData: recordOutputData
         );
     }
 
-    private static (string OperationName, string ActivityType) ExtractOperationInfo(ImmutableArray<AttributeData> attributes)
+    private static (string OperationName, string ActivityType, string InputParametersName, string OutputParametersName, bool RecordOutputData) ExtractOperationInfo(ImmutableArray<AttributeData> attributes)
     {
         foreach (var attr in attributes)
         {
@@ -52,11 +55,24 @@ internal static class TelemetryMethodSignatureTransformer
                     }
                 }
 
-                return (operationName, activityType);
+                var inputParametersName = attr.ConstructorArguments.Length > 2
+                    ? attr.ConstructorArguments[2].Value?.ToString() ?? "input.parameters"
+                    : "input.parameters";
+
+                var outputParametersName = attr.ConstructorArguments.Length > 3
+                    ? attr.ConstructorArguments[3].Value?.ToString() ?? "output.parameters"
+                    : "output.parameters";
+
+                var recordOutputData = attr.ConstructorArguments.Length > 4 &&
+                    attr.ConstructorArguments[4].Value is bool value
+                        ? value
+                        : true;
+
+                return (operationName, activityType, inputParametersName, outputParametersName, recordOutputData);
             }
         }
 
-        return ("UnknownOperation", "Internal");
+        return ("UnknownOperation", "Internal", "input.parameters", "output.parameters", true);
     }
 }
 

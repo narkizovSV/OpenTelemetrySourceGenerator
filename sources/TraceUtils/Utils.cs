@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Reflection;
+using System.Text.Encodings.Web;
+using System.Text.Json;
 
 namespace TraceUtils;
 
@@ -25,6 +27,14 @@ public static class Utils
     /// </summary>
     public static readonly ActivitySource ActivitySource =
         new(ServiceName, ServiceVersion);
+
+    /// <summary>
+    /// Глобальные настройки JSON для телеметрии.
+    /// </summary>
+    public static readonly JsonSerializerOptions TelemetryJsonSerializerOptions = new()
+    {
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+    };
 
     private static string ResolveServiceName()
     {
@@ -63,6 +73,40 @@ public static class Utils
     /// Использует активность, созданную из ActivitySource; когда false — достаточно вызвать метод напрямую.
     /// </summary>
     public static bool ShouldRecordData(Activity? activity) => activity is { IsAllDataRequested: true };
+
+    /// <summary>
+    /// Добавить тег в текущий Activity (если есть).
+    /// </summary>
+    /// <param name="tagName">Имя тега</param>
+    /// <param name="value">Значение тега</param>
+    public static void AddTagToCurrentActivity(string tagName, object? value)
+    {
+        var activity = Activity.Current;
+        if (activity is null)
+        {
+            return;
+        }
+
+        activity.SetTag(tagName, value);
+    }
+
+    /// <summary>
+    /// Добавить набор тегов в текущий Activity (если есть).
+    /// </summary>
+    /// <param name="tags">Словарь тегов</param>
+    public static void AddTagToCurrentActivity(IDictionary<string, object?> tags)
+    {
+        var activity = Activity.Current;
+        if (activity is null || tags is null)
+        {
+            return;
+        }
+
+        foreach (var tag in tags)
+        {
+            activity.SetTag(tag.Key, tag.Value);
+        }
+    }
 
     /// <summary>
     /// Добавить событие в текущий Activity (если есть)

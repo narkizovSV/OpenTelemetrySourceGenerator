@@ -21,22 +21,26 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"VoidNoParams\""));
+
                 instance.VoidNoParams();
 
             }
             catch (Exception ex)
             {
+                activity?.SetTag("error", true);
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
-                activity?.SetTag("exception.message", ex.Message);
-                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                activity?.SetTag("error.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("error.message", ex.Message);
+                activity?.SetTag("error.stacktrace", ex.StackTrace);
+
                 if (ex.InnerException is not null)
                 {
-                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
-                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                    activity?.SetTag("error.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("error.inner_message", ex.InnerException.Message);
                 }
-                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"VoidNoParams\""));
+
                 activity?.AddException(ex);
+
                 throw;
             }
             finally
@@ -47,6 +51,7 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         else
         {
             instance.VoidNoParams();
+
         }
     }
 
@@ -60,22 +65,30 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"SyncWithReturn\""));
-                return instance.SyncWithReturn();
 
+                var __result = instance.SyncWithReturn();
+
+                var __outputTags = new System.Collections.Generic.Dictionary<string, object?>();
+            __outputTags["result"] = __result;
+            activity?.SetTag("output.parameters", System.Text.Json.JsonSerializer.Serialize(__outputTags, Utils.TelemetryJsonSerializerOptions));
+                return __result;
             }
             catch (Exception ex)
             {
+                activity?.SetTag("error", true);
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
-                activity?.SetTag("exception.message", ex.Message);
-                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                activity?.SetTag("error.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("error.message", ex.Message);
+                activity?.SetTag("error.stacktrace", ex.StackTrace);
+
                 if (ex.InnerException is not null)
                 {
-                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
-                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                    activity?.SetTag("error.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("error.inner_message", ex.InnerException.Message);
                 }
-                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"SyncWithReturn\""));
+
                 activity?.AddException(ex);
+
                 throw;
             }
             finally
@@ -85,11 +98,13 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         }
         else
         {
-            return instance.SyncWithReturn();
+            var __result = instance.SyncWithReturn();
+
+            return __result;
         }
     }
 
-    public static async System.Threading.Tasks.Task AsyncTaskWithTraceAsync(this IAllSignaturesMethodsGrouped instance)
+    public static async System.Threading.Tasks.Task TaskWithTraceAsync(this IAllSignaturesMethodsGrouped instance)
     {
         using var activity = Utils.StartActivity("AsyncTask", ActivityKind.Internal);
 
@@ -99,22 +114,26 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"AsyncTask\""));
+
                 await instance.AsyncTask();
 
             }
             catch (Exception ex)
             {
+                activity?.SetTag("error", true);
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
-                activity?.SetTag("exception.message", ex.Message);
-                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                activity?.SetTag("error.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("error.message", ex.Message);
+                activity?.SetTag("error.stacktrace", ex.StackTrace);
+
                 if (ex.InnerException is not null)
                 {
-                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
-                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                    activity?.SetTag("error.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("error.inner_message", ex.InnerException.Message);
                 }
-                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"AsyncTask\""));
+
                 activity?.AddException(ex);
+
                 throw;
             }
             finally
@@ -125,10 +144,11 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         else
         {
             await instance.AsyncTask();
+
         }
     }
 
-    public static async System.Threading.Tasks.Task<string> AsyncTaskWithResultWithTraceAsync(this IAllSignaturesMethodsGrouped instance)
+    public static async System.Threading.Tasks.Task<string> TaskWithResultWithTraceAsync(this IAllSignaturesMethodsGrouped instance)
     {
         using var activity = Utils.StartActivity("AsyncTaskWithResult", ActivityKind.Internal);
 
@@ -138,22 +158,30 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"AsyncTaskWithResult\""));
-                return await instance.AsyncTaskWithResult();
 
+                var __result = await instance.AsyncTaskWithResult();
+
+                var __outputTags = new System.Collections.Generic.Dictionary<string, object?>();
+            __outputTags["result"] = __result;
+            activity?.SetTag("output.parameters", System.Text.Json.JsonSerializer.Serialize(__outputTags, Utils.TelemetryJsonSerializerOptions));
+                return __result;
             }
             catch (Exception ex)
             {
+                activity?.SetTag("error", true);
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
-                activity?.SetTag("exception.message", ex.Message);
-                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                activity?.SetTag("error.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("error.message", ex.Message);
+                activity?.SetTag("error.stacktrace", ex.StackTrace);
+
                 if (ex.InnerException is not null)
                 {
-                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
-                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                    activity?.SetTag("error.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("error.inner_message", ex.InnerException.Message);
                 }
-                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"AsyncTaskWithResult\""));
+
                 activity?.AddException(ex);
+
                 throw;
             }
             finally
@@ -163,11 +191,13 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         }
         else
         {
-            return await instance.AsyncTaskWithResult();
+            var __result = await instance.AsyncTaskWithResult();
+
+            return __result;
         }
     }
 
-    public static async System.Threading.Tasks.ValueTask AsyncValueTaskWithTraceAsync(this IAllSignaturesMethodsGrouped instance)
+    public static async System.Threading.Tasks.ValueTask ValueTaskWithTraceAsync(this IAllSignaturesMethodsGrouped instance)
     {
         using var activity = Utils.StartActivity("AsyncValueTask", ActivityKind.Internal);
 
@@ -177,22 +207,26 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"AsyncValueTask\""));
+
                 await instance.AsyncValueTask();
 
             }
             catch (Exception ex)
             {
+                activity?.SetTag("error", true);
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
-                activity?.SetTag("exception.message", ex.Message);
-                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                activity?.SetTag("error.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("error.message", ex.Message);
+                activity?.SetTag("error.stacktrace", ex.StackTrace);
+
                 if (ex.InnerException is not null)
                 {
-                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
-                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                    activity?.SetTag("error.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("error.inner_message", ex.InnerException.Message);
                 }
-                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"AsyncValueTask\""));
+
                 activity?.AddException(ex);
+
                 throw;
             }
             finally
@@ -203,10 +237,11 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         else
         {
             await instance.AsyncValueTask();
+
         }
     }
 
-    public static async System.Threading.Tasks.ValueTask<int> AsyncValueTaskWithResultWithTraceAsync(this IAllSignaturesMethodsGrouped instance)
+    public static async System.Threading.Tasks.ValueTask<int> ValueTaskWithResultWithTraceAsync(this IAllSignaturesMethodsGrouped instance)
     {
         using var activity = Utils.StartActivity("AsyncValueTaskWithResult", ActivityKind.Internal);
 
@@ -216,22 +251,30 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"AsyncValueTaskWithResult\""));
-                return await instance.AsyncValueTaskWithResult();
 
+                var __result = await instance.AsyncValueTaskWithResult();
+
+                var __outputTags = new System.Collections.Generic.Dictionary<string, object?>();
+            __outputTags["result"] = __result;
+            activity?.SetTag("output.parameters", System.Text.Json.JsonSerializer.Serialize(__outputTags, Utils.TelemetryJsonSerializerOptions));
+                return __result;
             }
             catch (Exception ex)
             {
+                activity?.SetTag("error", true);
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
-                activity?.SetTag("exception.message", ex.Message);
-                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                activity?.SetTag("error.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("error.message", ex.Message);
+                activity?.SetTag("error.stacktrace", ex.StackTrace);
+
                 if (ex.InnerException is not null)
                 {
-                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
-                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                    activity?.SetTag("error.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("error.inner_message", ex.InnerException.Message);
                 }
-                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"AsyncValueTaskWithResult\""));
+
                 activity?.AddException(ex);
+
                 throw;
             }
             finally
@@ -241,7 +284,9 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         }
         else
         {
-            return await instance.AsyncValueTaskWithResult();
+            var __result = await instance.AsyncValueTaskWithResult();
+
+            return __result;
         }
     }
 
@@ -251,32 +296,38 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
 
         if (Utils.ShouldRecordData(activity))
         {
-            activity?.SetTag("tag.int", intVal);
-            activity?.SetTag("tag.long", longVal);
-            activity?.SetTag("tag.double", doubleVal);
-            activity?.SetTag("tag.decimal", decimalVal);
-            activity?.SetTag("tag.bool", boolVal);
-            activity?.SetTag("tag.string", stringVal);
-            activity?.SetTag("tag.char", charVal);
+            var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();
+            __inputTags["tag.int"] = intVal;
+            __inputTags["tag.long"] = longVal;
+            __inputTags["tag.double"] = doubleVal;
+            __inputTags["tag.decimal"] = decimalVal;
+            __inputTags["tag.bool"] = boolVal;
+            __inputTags["tag.string"] = stringVal;
+            __inputTags["tag.char"] = charVal;
+            activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"PrimitiveTags\""));
+
                 instance.PrimitiveTags(intVal, longVal, doubleVal, decimalVal, boolVal, stringVal, charVal);
 
             }
             catch (Exception ex)
             {
+                activity?.SetTag("error", true);
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
-                activity?.SetTag("exception.message", ex.Message);
-                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                activity?.SetTag("error.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("error.message", ex.Message);
+                activity?.SetTag("error.stacktrace", ex.StackTrace);
+
                 if (ex.InnerException is not null)
                 {
-                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
-                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                    activity?.SetTag("error.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("error.inner_message", ex.InnerException.Message);
                 }
-                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"PrimitiveTags\""));
+
                 activity?.AddException(ex);
+
                 throw;
             }
             finally
@@ -287,6 +338,7 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         else
         {
             instance.PrimitiveTags(intVal, longVal, doubleVal, decimalVal, boolVal, stringVal, charVal);
+
         }
     }
 
@@ -296,28 +348,34 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
 
         if (Utils.ShouldRecordData(activity))
         {
-            activity?.SetTag("tag.count", count);
-            activity?.SetTag("tag.name", name);
-            activity?.SetTag("tag.enabled", enabled);
+            var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();
+            __inputTags["tag.count"] = count;
+            __inputTags["tag.name"] = name;
+            __inputTags["tag.enabled"] = enabled;
+            activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"PrimitiveDefaults\""));
+
                 instance.PrimitiveDefaults(count, name, enabled);
 
             }
             catch (Exception ex)
             {
+                activity?.SetTag("error", true);
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
-                activity?.SetTag("exception.message", ex.Message);
-                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                activity?.SetTag("error.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("error.message", ex.Message);
+                activity?.SetTag("error.stacktrace", ex.StackTrace);
+
                 if (ex.InnerException is not null)
                 {
-                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
-                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                    activity?.SetTag("error.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("error.inner_message", ex.InnerException.Message);
                 }
-                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"PrimitiveDefaults\""));
+
                 activity?.AddException(ex);
+
                 throw;
             }
             finally
@@ -328,6 +386,7 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         else
         {
             instance.PrimitiveDefaults(count, name, enabled);
+
         }
     }
 
@@ -337,29 +396,35 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
 
         if (Utils.ShouldRecordData(activity))
         {
-            activity?.SetTag("tag.date", date.ToString("O"));
-            activity?.SetTag("tag.dateOffset", dateOffset.ToString("O"));
-            activity?.SetTag("tag.dateOnly", dateOnly.ToString("O"));
-            activity?.SetTag("tag.timeOnly", timeOnly.ToString("O"));
+            var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();
+            __inputTags["tag.date"] = date.ToString("O");
+            __inputTags["tag.dateOffset"] = dateOffset.ToString("O");
+            __inputTags["tag.dateOnly"] = dateOnly.ToString("O");
+            __inputTags["tag.timeOnly"] = timeOnly.ToString("O");
+            activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"DateTimeTags\""));
+
                 instance.DateTimeTags(date, dateOffset, dateOnly, timeOnly);
 
             }
             catch (Exception ex)
             {
+                activity?.SetTag("error", true);
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
-                activity?.SetTag("exception.message", ex.Message);
-                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                activity?.SetTag("error.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("error.message", ex.Message);
+                activity?.SetTag("error.stacktrace", ex.StackTrace);
+
                 if (ex.InnerException is not null)
                 {
-                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
-                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                    activity?.SetTag("error.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("error.inner_message", ex.InnerException.Message);
                 }
-                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"DateTimeTags\""));
+
                 activity?.AddException(ex);
+
                 throw;
             }
             finally
@@ -370,6 +435,7 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         else
         {
             instance.DateTimeTags(date, dateOffset, dateOnly, timeOnly);
+
         }
     }
 
@@ -379,26 +445,32 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
 
         if (Utils.ShouldRecordData(activity))
         {
-            activity?.SetTag("tag.timestamp", timestamp.ToString("O"));
+            var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();
+            __inputTags["tag.timestamp"] = timestamp.ToString("O");
+            activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"DateTimeIn\""));
+
                 instance.DateTimeIn(in timestamp);
 
             }
             catch (Exception ex)
             {
+                activity?.SetTag("error", true);
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
-                activity?.SetTag("exception.message", ex.Message);
-                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                activity?.SetTag("error.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("error.message", ex.Message);
+                activity?.SetTag("error.stacktrace", ex.StackTrace);
+
                 if (ex.InnerException is not null)
                 {
-                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
-                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                    activity?.SetTag("error.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("error.inner_message", ex.InnerException.Message);
                 }
-                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"DateTimeIn\""));
+
                 activity?.AddException(ex);
+
                 throw;
             }
             finally
@@ -409,6 +481,7 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         else
         {
             instance.DateTimeIn(in timestamp);
+
         }
     }
 
@@ -418,29 +491,35 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
 
         if (Utils.ShouldRecordData(activity))
         {
-            activity?.SetTag("tag.date", date?.ToString("O"));
-            activity?.SetTag("tag.dateOffset", dateOffset?.ToString("O"));
-            activity?.SetTag("tag.dateOnly", dateOnly?.ToString("O"));
-            activity?.SetTag("tag.timeOnly", timeOnly?.ToString("O"));
+            var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();
+            __inputTags["tag.date"] = date?.ToString("O");
+            __inputTags["tag.dateOffset"] = dateOffset?.ToString("O");
+            __inputTags["tag.dateOnly"] = dateOnly?.ToString("O");
+            __inputTags["tag.timeOnly"] = timeOnly?.ToString("O");
+            activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"NullableDateTimeTags\""));
+
                 instance.NullableDateTimeTags(date, dateOffset, dateOnly, timeOnly);
 
             }
             catch (Exception ex)
             {
+                activity?.SetTag("error", true);
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
-                activity?.SetTag("exception.message", ex.Message);
-                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                activity?.SetTag("error.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("error.message", ex.Message);
+                activity?.SetTag("error.stacktrace", ex.StackTrace);
+
                 if (ex.InnerException is not null)
                 {
-                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
-                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                    activity?.SetTag("error.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("error.inner_message", ex.InnerException.Message);
                 }
-                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"NullableDateTimeTags\""));
+
                 activity?.AddException(ex);
+
                 throw;
             }
             finally
@@ -451,6 +530,7 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         else
         {
             instance.NullableDateTimeTags(date, dateOffset, dateOnly, timeOnly);
+
         }
     }
 
@@ -460,27 +540,33 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
 
         if (Utils.ShouldRecordData(activity))
         {
-            activity?.SetTag("tag.id", id.ToString());
-            activity?.SetTag("tag.correlationId", correlationId?.ToString());
+            var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();
+            __inputTags["tag.id"] = id.ToString();
+            __inputTags["tag.correlationId"] = correlationId?.ToString();
+            activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"GuidTags\""));
+
                 instance.GuidTags(id, correlationId);
 
             }
             catch (Exception ex)
             {
+                activity?.SetTag("error", true);
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
-                activity?.SetTag("exception.message", ex.Message);
-                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                activity?.SetTag("error.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("error.message", ex.Message);
+                activity?.SetTag("error.stacktrace", ex.StackTrace);
+
                 if (ex.InnerException is not null)
                 {
-                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
-                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                    activity?.SetTag("error.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("error.inner_message", ex.InnerException.Message);
                 }
-                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"GuidTags\""));
+
                 activity?.AddException(ex);
+
                 throw;
             }
             finally
@@ -491,6 +577,7 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         else
         {
             instance.GuidTags(id, correlationId);
+
         }
     }
 
@@ -500,28 +587,34 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
 
         if (Utils.ShouldRecordData(activity))
         {
-            activity?.SetTag("tag.kind", kind);
-            activity?.SetTag("tag.nullableKind", nullableKind);
-            activity?.SetTag("tag.defaultKind", defaultKind);
+            var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();
+            __inputTags["tag.kind"] = kind;
+            __inputTags["tag.nullableKind"] = nullableKind;
+            __inputTags["tag.defaultKind"] = defaultKind;
+            activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"EnumTags\""));
+
                 instance.EnumTags(kind, nullableKind, defaultKind);
 
             }
             catch (Exception ex)
             {
+                activity?.SetTag("error", true);
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
-                activity?.SetTag("exception.message", ex.Message);
-                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                activity?.SetTag("error.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("error.message", ex.Message);
+                activity?.SetTag("error.stacktrace", ex.StackTrace);
+
                 if (ex.InnerException is not null)
                 {
-                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
-                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                    activity?.SetTag("error.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("error.inner_message", ex.InnerException.Message);
                 }
-                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"EnumTags\""));
+
                 activity?.AddException(ex);
+
                 throw;
             }
             finally
@@ -532,6 +625,7 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         else
         {
             instance.EnumTags(kind, nullableKind, defaultKind);
+
         }
     }
 
@@ -541,27 +635,33 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
 
         if (Utils.ShouldRecordData(activity))
         {
-            activity?.SetTag("tag.duration", duration);
-            activity?.SetTag("tag.timeout", timeout);
+            var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();
+            __inputTags["tag.duration"] = duration;
+            __inputTags["tag.timeout"] = timeout;
+            activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"TimeSpanTags\""));
+
                 instance.TimeSpanTags(duration, timeout);
 
             }
             catch (Exception ex)
             {
+                activity?.SetTag("error", true);
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
-                activity?.SetTag("exception.message", ex.Message);
-                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                activity?.SetTag("error.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("error.message", ex.Message);
+                activity?.SetTag("error.stacktrace", ex.StackTrace);
+
                 if (ex.InnerException is not null)
                 {
-                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
-                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                    activity?.SetTag("error.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("error.inner_message", ex.InnerException.Message);
                 }
-                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"TimeSpanTags\""));
+
                 activity?.AddException(ex);
+
                 throw;
             }
             finally
@@ -572,6 +672,7 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         else
         {
             instance.TimeSpanTags(duration, timeout);
+
         }
     }
 
@@ -581,28 +682,34 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
 
         if (Utils.ShouldRecordData(activity))
         {
-            activity?.SetTag("tag.bytes", System.Text.Json.JsonSerializer.Serialize(bytes));
-            activity?.SetTag("tag.ids", System.Text.Json.JsonSerializer.Serialize(ids));
-            activity?.SetTag("tag.names", System.Text.Json.JsonSerializer.Serialize(names));
+            var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();
+            __inputTags["tag.bytes"] = System.Text.Json.JsonSerializer.Serialize(bytes, Utils.TelemetryJsonSerializerOptions);
+            __inputTags["tag.ids"] = System.Text.Json.JsonSerializer.Serialize(ids, Utils.TelemetryJsonSerializerOptions);
+            __inputTags["tag.names"] = System.Text.Json.JsonSerializer.Serialize(names, Utils.TelemetryJsonSerializerOptions);
+            activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"ArraySerialize\""));
+
                 instance.ArraySerialize(bytes, ids, names);
 
             }
             catch (Exception ex)
             {
+                activity?.SetTag("error", true);
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
-                activity?.SetTag("exception.message", ex.Message);
-                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                activity?.SetTag("error.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("error.message", ex.Message);
+                activity?.SetTag("error.stacktrace", ex.StackTrace);
+
                 if (ex.InnerException is not null)
                 {
-                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
-                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                    activity?.SetTag("error.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("error.inner_message", ex.InnerException.Message);
                 }
-                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"ArraySerialize\""));
+
                 activity?.AddException(ex);
+
                 throw;
             }
             finally
@@ -613,6 +720,7 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         else
         {
             instance.ArraySerialize(bytes, ids, names);
+
         }
     }
 
@@ -626,22 +734,26 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"ArrayNoSerialize\""));
+
                 instance.ArrayNoSerialize(bytes, ids, names);
 
             }
             catch (Exception ex)
             {
+                activity?.SetTag("error", true);
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
-                activity?.SetTag("exception.message", ex.Message);
-                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                activity?.SetTag("error.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("error.message", ex.Message);
+                activity?.SetTag("error.stacktrace", ex.StackTrace);
+
                 if (ex.InnerException is not null)
                 {
-                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
-                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                    activity?.SetTag("error.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("error.inner_message", ex.InnerException.Message);
                 }
-                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"ArrayNoSerialize\""));
+
                 activity?.AddException(ex);
+
                 throw;
             }
             finally
@@ -652,6 +764,7 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         else
         {
             instance.ArrayNoSerialize(bytes, ids, names);
+
         }
     }
 
@@ -661,29 +774,35 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
 
         if (Utils.ShouldRecordData(activity))
         {
-            activity?.SetTag("tag.list", System.Text.Json.JsonSerializer.Serialize(list));
-            activity?.SetTag("tag.dict", System.Text.Json.JsonSerializer.Serialize(dict));
-            activity?.SetTag("tag.enumerable", System.Text.Json.JsonSerializer.Serialize(enumerable));
-            activity?.SetTag("tag.readonlyList", System.Text.Json.JsonSerializer.Serialize(readonlyList));
+            var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();
+            __inputTags["tag.list"] = System.Text.Json.JsonSerializer.Serialize(list, Utils.TelemetryJsonSerializerOptions);
+            __inputTags["tag.dict"] = System.Text.Json.JsonSerializer.Serialize(dict, Utils.TelemetryJsonSerializerOptions);
+            __inputTags["tag.enumerable"] = System.Text.Json.JsonSerializer.Serialize(enumerable, Utils.TelemetryJsonSerializerOptions);
+            __inputTags["tag.readonlyList"] = System.Text.Json.JsonSerializer.Serialize(readonlyList, Utils.TelemetryJsonSerializerOptions);
+            activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"GenericCollectionSerialize\""));
+
                 instance.GenericCollectionSerialize(list, dict, enumerable, readonlyList);
 
             }
             catch (Exception ex)
             {
+                activity?.SetTag("error", true);
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
-                activity?.SetTag("exception.message", ex.Message);
-                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                activity?.SetTag("error.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("error.message", ex.Message);
+                activity?.SetTag("error.stacktrace", ex.StackTrace);
+
                 if (ex.InnerException is not null)
                 {
-                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
-                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                    activity?.SetTag("error.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("error.inner_message", ex.InnerException.Message);
                 }
-                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"GenericCollectionSerialize\""));
+
                 activity?.AddException(ex);
+
                 throw;
             }
             finally
@@ -694,6 +813,7 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         else
         {
             instance.GenericCollectionSerialize(list, dict, enumerable, readonlyList);
+
         }
     }
 
@@ -707,22 +827,26 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"GenericCollectionNoSerialize\""));
+
                 instance.GenericCollectionNoSerialize(list, dict, enumerable);
 
             }
             catch (Exception ex)
             {
+                activity?.SetTag("error", true);
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
-                activity?.SetTag("exception.message", ex.Message);
-                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                activity?.SetTag("error.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("error.message", ex.Message);
+                activity?.SetTag("error.stacktrace", ex.StackTrace);
+
                 if (ex.InnerException is not null)
                 {
-                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
-                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                    activity?.SetTag("error.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("error.inner_message", ex.InnerException.Message);
                 }
-                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"GenericCollectionNoSerialize\""));
+
                 activity?.AddException(ex);
+
                 throw;
             }
             finally
@@ -733,6 +857,7 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         else
         {
             instance.GenericCollectionNoSerialize(list, dict, enumerable);
+
         }
     }
 
@@ -742,27 +867,33 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
 
         if (Utils.ShouldRecordData(activity))
         {
-            activity?.SetTag("tag.profile", System.Text.Json.JsonSerializer.Serialize(profile));
-            activity?.SetTag("tag.nullableProfile", System.Text.Json.JsonSerializer.Serialize(nullableProfile));
+            var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();
+            __inputTags["tag.profile"] = System.Text.Json.JsonSerializer.Serialize(profile, Utils.TelemetryJsonSerializerOptions);
+            __inputTags["tag.nullableProfile"] = System.Text.Json.JsonSerializer.Serialize(nullableProfile, Utils.TelemetryJsonSerializerOptions);
+            activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"ClassSerialize\""));
+
                 instance.ClassSerialize(profile, nullableProfile);
 
             }
             catch (Exception ex)
             {
+                activity?.SetTag("error", true);
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
-                activity?.SetTag("exception.message", ex.Message);
-                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                activity?.SetTag("error.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("error.message", ex.Message);
+                activity?.SetTag("error.stacktrace", ex.StackTrace);
+
                 if (ex.InnerException is not null)
                 {
-                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
-                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                    activity?.SetTag("error.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("error.inner_message", ex.InnerException.Message);
                 }
-                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"ClassSerialize\""));
+
                 activity?.AddException(ex);
+
                 throw;
             }
             finally
@@ -773,6 +904,7 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         else
         {
             instance.ClassSerialize(profile, nullableProfile);
+
         }
     }
 
@@ -786,22 +918,26 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"ClassNoSerialize\""));
+
                 instance.ClassNoSerialize(profile, nullableProfile);
 
             }
             catch (Exception ex)
             {
+                activity?.SetTag("error", true);
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
-                activity?.SetTag("exception.message", ex.Message);
-                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                activity?.SetTag("error.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("error.message", ex.Message);
+                activity?.SetTag("error.stacktrace", ex.StackTrace);
+
                 if (ex.InnerException is not null)
                 {
-                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
-                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                    activity?.SetTag("error.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("error.inner_message", ex.InnerException.Message);
                 }
-                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"ClassNoSerialize\""));
+
                 activity?.AddException(ex);
+
                 throw;
             }
             finally
@@ -812,6 +948,7 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         else
         {
             instance.ClassNoSerialize(profile, nullableProfile);
+
         }
     }
 
@@ -821,27 +958,33 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
 
         if (Utils.ShouldRecordData(activity))
         {
-            activity?.SetTag("tag.coords", System.Text.Json.JsonSerializer.Serialize(coords));
-            activity?.SetTag("tag.nullableCoords", System.Text.Json.JsonSerializer.Serialize(nullableCoords));
+            var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();
+            __inputTags["tag.coords"] = System.Text.Json.JsonSerializer.Serialize(coords, Utils.TelemetryJsonSerializerOptions);
+            __inputTags["tag.nullableCoords"] = System.Text.Json.JsonSerializer.Serialize(nullableCoords, Utils.TelemetryJsonSerializerOptions);
+            activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"StructSerialize\""));
+
                 instance.StructSerialize(coords, nullableCoords);
 
             }
             catch (Exception ex)
             {
+                activity?.SetTag("error", true);
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
-                activity?.SetTag("exception.message", ex.Message);
-                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                activity?.SetTag("error.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("error.message", ex.Message);
+                activity?.SetTag("error.stacktrace", ex.StackTrace);
+
                 if (ex.InnerException is not null)
                 {
-                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
-                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                    activity?.SetTag("error.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("error.inner_message", ex.InnerException.Message);
                 }
-                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"StructSerialize\""));
+
                 activity?.AddException(ex);
+
                 throw;
             }
             finally
@@ -852,6 +995,7 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         else
         {
             instance.StructSerialize(coords, nullableCoords);
+
         }
     }
 
@@ -865,22 +1009,26 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"StructNoSerialize\""));
+
                 instance.StructNoSerialize(coords, nullableCoords);
 
             }
             catch (Exception ex)
             {
+                activity?.SetTag("error", true);
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
-                activity?.SetTag("exception.message", ex.Message);
-                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                activity?.SetTag("error.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("error.message", ex.Message);
+                activity?.SetTag("error.stacktrace", ex.StackTrace);
+
                 if (ex.InnerException is not null)
                 {
-                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
-                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                    activity?.SetTag("error.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("error.inner_message", ex.InnerException.Message);
                 }
-                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"StructNoSerialize\""));
+
                 activity?.AddException(ex);
+
                 throw;
             }
             finally
@@ -891,6 +1039,7 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         else
         {
             instance.StructNoSerialize(coords, nullableCoords);
+
         }
     }
 
@@ -900,33 +1049,39 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
 
         if (Utils.ShouldRecordData(activity))
         {
-            activity?.SetTag("tag.id", id);
-            activity?.SetTag("tag.name", name);
-            activity?.SetTag("tag.date", date.ToString("O"));
-            activity?.SetTag("tag.guid", guid.ToString());
-            activity?.SetTag("tag.kind", kind);
-            activity?.SetTag("tag.profile", System.Text.Json.JsonSerializer.Serialize(profile));
-            activity?.SetTag("tag.coords", System.Text.Json.JsonSerializer.Serialize(coords));
-            activity?.SetTag("tag.ids", System.Text.Json.JsonSerializer.Serialize(ids));
+            var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();
+            __inputTags["tag.id"] = id;
+            __inputTags["tag.name"] = name;
+            __inputTags["tag.date"] = date.ToString("O");
+            __inputTags["tag.guid"] = guid.ToString();
+            __inputTags["tag.kind"] = kind;
+            __inputTags["tag.profile"] = System.Text.Json.JsonSerializer.Serialize(profile, Utils.TelemetryJsonSerializerOptions);
+            __inputTags["tag.coords"] = System.Text.Json.JsonSerializer.Serialize(coords, Utils.TelemetryJsonSerializerOptions);
+            __inputTags["tag.ids"] = System.Text.Json.JsonSerializer.Serialize(ids, Utils.TelemetryJsonSerializerOptions);
+            activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"MixedTags\""));
+
                 instance.MixedTags(id, name, date, guid, kind, profile, coords, ids, skipProfile, skipCoords, skipIds);
 
             }
             catch (Exception ex)
             {
+                activity?.SetTag("error", true);
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
-                activity?.SetTag("exception.message", ex.Message);
-                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                activity?.SetTag("error.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("error.message", ex.Message);
+                activity?.SetTag("error.stacktrace", ex.StackTrace);
+
                 if (ex.InnerException is not null)
                 {
-                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
-                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                    activity?.SetTag("error.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("error.inner_message", ex.InnerException.Message);
                 }
-                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"MixedTags\""));
+
                 activity?.AddException(ex);
+
                 throw;
             }
             finally
@@ -937,6 +1092,7 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         else
         {
             instance.MixedTags(id, name, date, guid, kind, profile, coords, ids, skipProfile, skipCoords, skipIds);
+
         }
     }
 
@@ -946,26 +1102,36 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
 
         if (Utils.ShouldRecordData(activity))
         {
-            activity?.SetTag("tag.input", System.Text.Json.JsonSerializer.Serialize(input));
+            var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();
+            __inputTags["tag.input"] = System.Text.Json.JsonSerializer.Serialize(input, Utils.TelemetryJsonSerializerOptions);
+            activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"GenericMethod\""));
-                return instance.GenericMethod<T>(input);
 
+                var __result = instance.GenericMethod<T>(input);
+
+                var __outputTags = new System.Collections.Generic.Dictionary<string, object?>();
+            __outputTags["result"] = __result;
+            activity?.SetTag("output.parameters", System.Text.Json.JsonSerializer.Serialize(__outputTags, Utils.TelemetryJsonSerializerOptions));
+                return __result;
             }
             catch (Exception ex)
             {
+                activity?.SetTag("error", true);
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
-                activity?.SetTag("exception.message", ex.Message);
-                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                activity?.SetTag("error.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("error.message", ex.Message);
+                activity?.SetTag("error.stacktrace", ex.StackTrace);
+
                 if (ex.InnerException is not null)
                 {
-                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
-                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                    activity?.SetTag("error.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("error.inner_message", ex.InnerException.Message);
                 }
-                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"GenericMethod\""));
+
                 activity?.AddException(ex);
+
                 throw;
             }
             finally
@@ -975,7 +1141,9 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         }
         else
         {
-            return instance.GenericMethod<T>(input);
+            var __result = instance.GenericMethod<T>(input);
+
+            return __result;
         }
     }
 
@@ -989,22 +1157,30 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"GenericMethodNoSerialize\""));
-                return instance.GenericMethodNoSerialize<T>(input);
 
+                var __result = instance.GenericMethodNoSerialize<T>(input);
+
+                var __outputTags = new System.Collections.Generic.Dictionary<string, object?>();
+            __outputTags["result"] = __result;
+            activity?.SetTag("output.parameters", System.Text.Json.JsonSerializer.Serialize(__outputTags, Utils.TelemetryJsonSerializerOptions));
+                return __result;
             }
             catch (Exception ex)
             {
+                activity?.SetTag("error", true);
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
-                activity?.SetTag("exception.message", ex.Message);
-                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                activity?.SetTag("error.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("error.message", ex.Message);
+                activity?.SetTag("error.stacktrace", ex.StackTrace);
+
                 if (ex.InnerException is not null)
                 {
-                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
-                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                    activity?.SetTag("error.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("error.inner_message", ex.InnerException.Message);
                 }
-                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"GenericMethodNoSerialize\""));
+
                 activity?.AddException(ex);
+
                 throw;
             }
             finally
@@ -1014,7 +1190,9 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         }
         else
         {
-            return instance.GenericMethodNoSerialize<T>(input);
+            var __result = instance.GenericMethodNoSerialize<T>(input);
+
+            return __result;
         }
     }
 
@@ -1025,26 +1203,32 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
 
         if (Utils.ShouldRecordData(activity))
         {
-            activity?.SetTag("tag.entity", System.Text.Json.JsonSerializer.Serialize(entity));
+            var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();
+            __inputTags["tag.entity"] = System.Text.Json.JsonSerializer.Serialize(entity, Utils.TelemetryJsonSerializerOptions);
+            activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"GenericWithConstraints\""));
+
                 instance.GenericWithConstraints<T>(entity);
 
             }
             catch (Exception ex)
             {
+                activity?.SetTag("error", true);
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
-                activity?.SetTag("exception.message", ex.Message);
-                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                activity?.SetTag("error.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("error.message", ex.Message);
+                activity?.SetTag("error.stacktrace", ex.StackTrace);
+
                 if (ex.InnerException is not null)
                 {
-                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
-                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                    activity?.SetTag("error.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("error.inner_message", ex.InnerException.Message);
                 }
-                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"GenericWithConstraints\""));
+
                 activity?.AddException(ex);
+
                 throw;
             }
             finally
@@ -1055,6 +1239,7 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         else
         {
             instance.GenericWithConstraints<T>(entity);
+
         }
     }
 
@@ -1065,26 +1250,36 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
 
         if (Utils.ShouldRecordData(activity))
         {
-            activity?.SetTag("tag.source", System.Text.Json.JsonSerializer.Serialize(source));
+            var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();
+            __inputTags["tag.source"] = System.Text.Json.JsonSerializer.Serialize(source, Utils.TelemetryJsonSerializerOptions);
+            activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"GenericMultipleTypes\""));
-                return instance.GenericMultipleTypes<TInput, TOutput>(source);
 
+                var __result = instance.GenericMultipleTypes<TInput, TOutput>(source);
+
+                var __outputTags = new System.Collections.Generic.Dictionary<string, object?>();
+            __outputTags["result"] = __result;
+            activity?.SetTag("output.parameters", System.Text.Json.JsonSerializer.Serialize(__outputTags, Utils.TelemetryJsonSerializerOptions));
+                return __result;
             }
             catch (Exception ex)
             {
+                activity?.SetTag("error", true);
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
-                activity?.SetTag("exception.message", ex.Message);
-                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                activity?.SetTag("error.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("error.message", ex.Message);
+                activity?.SetTag("error.stacktrace", ex.StackTrace);
+
                 if (ex.InnerException is not null)
                 {
-                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
-                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                    activity?.SetTag("error.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("error.inner_message", ex.InnerException.Message);
                 }
-                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"GenericMultipleTypes\""));
+
                 activity?.AddException(ex);
+
                 throw;
             }
             finally
@@ -1094,7 +1289,9 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         }
         else
         {
-            return instance.GenericMultipleTypes<TInput, TOutput>(source);
+            var __result = instance.GenericMultipleTypes<TInput, TOutput>(source);
+
+            return __result;
         }
     }
 
@@ -1104,27 +1301,37 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
 
         if (Utils.ShouldRecordData(activity))
         {
-            activity?.SetTag("tag.inVal", inVal);
-            activity?.SetTag("tag.refVal", refVal);
+            var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();
+            __inputTags["tag.inVal"] = inVal;
+            __inputTags["tag.refVal"] = refVal;
+            activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"RefParameters\""));
+
                 instance.RefParameters(in inVal, ref refVal, out outVal);
-                activity?.SetTag("tag.outVal", outVal);
+
+                var __outputTags = new System.Collections.Generic.Dictionary<string, object?>();
+            __outputTags["tag.outVal"] = outVal;
+            activity?.SetTag("output.parameters", System.Text.Json.JsonSerializer.Serialize(__outputTags, Utils.TelemetryJsonSerializerOptions));
+
             }
             catch (Exception ex)
             {
+                activity?.SetTag("error", true);
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
-                activity?.SetTag("exception.message", ex.Message);
-                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                activity?.SetTag("error.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("error.message", ex.Message);
+                activity?.SetTag("error.stacktrace", ex.StackTrace);
+
                 if (ex.InnerException is not null)
                 {
-                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
-                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                    activity?.SetTag("error.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("error.inner_message", ex.InnerException.Message);
                 }
-                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"RefParameters\""));
+
                 activity?.AddException(ex);
+
                 throw;
             }
             finally
@@ -1135,6 +1342,7 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         else
         {
             instance.RefParameters(in inVal, ref refVal, out outVal);
+
         }
     }
 
@@ -1144,26 +1352,32 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
 
         if (Utils.ShouldRecordData(activity))
         {
-            activity?.SetTag("tag.date", date.ToString("O"));
+            var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();
+            __inputTags["tag.date"] = date.ToString("O");
+            activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"InDateTime\""));
+
                 instance.InDateTime(in date);
 
             }
             catch (Exception ex)
             {
+                activity?.SetTag("error", true);
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
-                activity?.SetTag("exception.message", ex.Message);
-                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                activity?.SetTag("error.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("error.message", ex.Message);
+                activity?.SetTag("error.stacktrace", ex.StackTrace);
+
                 if (ex.InnerException is not null)
                 {
-                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
-                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                    activity?.SetTag("error.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("error.inner_message", ex.InnerException.Message);
                 }
-                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"InDateTime\""));
+
                 activity?.AddException(ex);
+
                 throw;
             }
             finally
@@ -1174,6 +1388,7 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         else
         {
             instance.InDateTime(in date);
+
         }
     }
 
@@ -1183,26 +1398,32 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
 
         if (Utils.ShouldRecordData(activity))
         {
-            activity?.SetTag("tag.coords", System.Text.Json.JsonSerializer.Serialize(coords));
+            var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();
+            __inputTags["tag.coords"] = System.Text.Json.JsonSerializer.Serialize(coords, Utils.TelemetryJsonSerializerOptions);
+            activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"InStruct\""));
+
                 instance.InStruct(in coords);
 
             }
             catch (Exception ex)
             {
+                activity?.SetTag("error", true);
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
-                activity?.SetTag("exception.message", ex.Message);
-                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                activity?.SetTag("error.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("error.message", ex.Message);
+                activity?.SetTag("error.stacktrace", ex.StackTrace);
+
                 if (ex.InnerException is not null)
                 {
-                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
-                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                    activity?.SetTag("error.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("error.inner_message", ex.InnerException.Message);
                 }
-                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"InStruct\""));
+
                 activity?.AddException(ex);
+
                 throw;
             }
             finally
@@ -1213,6 +1434,7 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         else
         {
             instance.InStruct(in coords);
+
         }
     }
 
@@ -1222,26 +1444,32 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
 
         if (Utils.ShouldRecordData(activity))
         {
-            activity?.SetTag("tag.withTag", withTag);
+            var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();
+            __inputTags["tag.withTag"] = withTag;
+            activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"NoTagParams\""));
+
                 instance.NoTagParams(noTagInt, noTagString, withTag);
 
             }
             catch (Exception ex)
             {
+                activity?.SetTag("error", true);
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
-                activity?.SetTag("exception.message", ex.Message);
-                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                activity?.SetTag("error.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("error.message", ex.Message);
+                activity?.SetTag("error.stacktrace", ex.StackTrace);
+
                 if (ex.InnerException is not null)
                 {
-                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
-                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                    activity?.SetTag("error.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("error.inner_message", ex.InnerException.Message);
                 }
-                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"NoTagParams\""));
+
                 activity?.AddException(ex);
+
                 throw;
             }
             finally
@@ -1252,6 +1480,7 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         else
         {
             instance.NoTagParams(noTagInt, noTagString, withTag);
+
         }
     }
 
@@ -1265,22 +1494,26 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"CancellationOnly\""));
+
                 await instance.CancellationOnly(cancellationToken);
 
             }
             catch (Exception ex)
             {
+                activity?.SetTag("error", true);
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
-                activity?.SetTag("exception.message", ex.Message);
-                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                activity?.SetTag("error.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("error.message", ex.Message);
+                activity?.SetTag("error.stacktrace", ex.StackTrace);
+
                 if (ex.InnerException is not null)
                 {
-                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
-                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                    activity?.SetTag("error.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("error.inner_message", ex.InnerException.Message);
                 }
-                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"CancellationOnly\""));
+
                 activity?.AddException(ex);
+
                 throw;
             }
             finally
@@ -1291,6 +1524,7 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         else
         {
             await instance.CancellationOnly(cancellationToken);
+
         }
     }
 
@@ -1300,27 +1534,33 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
 
         if (Utils.ShouldRecordData(activity))
         {
-            activity?.SetTag("tag.operation", operation);
-            activity?.SetTag("tag.values", System.Text.Json.JsonSerializer.Serialize(values));
+            var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();
+            __inputTags["tag.operation"] = operation;
+            __inputTags["tag.values"] = System.Text.Json.JsonSerializer.Serialize(values, Utils.TelemetryJsonSerializerOptions);
+            activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"ParamsArray\""));
+
                 instance.ParamsArray(operation, values);
 
             }
             catch (Exception ex)
             {
+                activity?.SetTag("error", true);
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
-                activity?.SetTag("exception.message", ex.Message);
-                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                activity?.SetTag("error.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("error.message", ex.Message);
+                activity?.SetTag("error.stacktrace", ex.StackTrace);
+
                 if (ex.InnerException is not null)
                 {
-                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
-                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                    activity?.SetTag("error.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("error.inner_message", ex.InnerException.Message);
                 }
-                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"ParamsArray\""));
+
                 activity?.AddException(ex);
+
                 throw;
             }
             finally
@@ -1331,6 +1571,7 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         else
         {
             instance.ParamsArray(operation, values);
+
         }
     }
 
@@ -1340,26 +1581,32 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
 
         if (Utils.ShouldRecordData(activity))
         {
-            activity?.SetTag("tag.operation", operation);
+            var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();
+            __inputTags["tag.operation"] = operation;
+            activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"ParamsArrayNoSerialize\""));
+
                 instance.ParamsArrayNoSerialize(operation, values);
 
             }
             catch (Exception ex)
             {
+                activity?.SetTag("error", true);
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
-                activity?.SetTag("exception.message", ex.Message);
-                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                activity?.SetTag("error.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("error.message", ex.Message);
+                activity?.SetTag("error.stacktrace", ex.StackTrace);
+
                 if (ex.InnerException is not null)
                 {
-                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
-                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                    activity?.SetTag("error.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("error.inner_message", ex.InnerException.Message);
                 }
-                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"ParamsArrayNoSerialize\""));
+
                 activity?.AddException(ex);
+
                 throw;
             }
             finally
@@ -1370,6 +1617,7 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         else
         {
             instance.ParamsArrayNoSerialize(operation, values);
+
         }
     }
 
@@ -1379,26 +1627,36 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
 
         if (Utils.ShouldRecordData(activity))
         {
-            activity?.SetTag("tag.input", input);
+            var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();
+            __inputTags["tag.input"] = input;
+            activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"TupleReturn\""));
-                return instance.TupleReturn(input);
 
+                var __result = instance.TupleReturn(input);
+
+                var __outputTags = new System.Collections.Generic.Dictionary<string, object?>();
+            __outputTags["result"] = __result;
+            activity?.SetTag("output.parameters", System.Text.Json.JsonSerializer.Serialize(__outputTags, Utils.TelemetryJsonSerializerOptions));
+                return __result;
             }
             catch (Exception ex)
             {
+                activity?.SetTag("error", true);
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
-                activity?.SetTag("exception.message", ex.Message);
-                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                activity?.SetTag("error.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("error.message", ex.Message);
+                activity?.SetTag("error.stacktrace", ex.StackTrace);
+
                 if (ex.InnerException is not null)
                 {
-                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
-                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                    activity?.SetTag("error.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("error.inner_message", ex.InnerException.Message);
                 }
-                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"TupleReturn\""));
+
                 activity?.AddException(ex);
+
                 throw;
             }
             finally
@@ -1408,36 +1666,48 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         }
         else
         {
-            return instance.TupleReturn(input);
+            var __result = instance.TupleReturn(input);
+
+            return __result;
         }
     }
 
-    public static async System.Threading.Tasks.Task<(int count, DateTime lastUpdate)> AsyncTupleReturnWithTraceAsync(this IAllSignaturesMethodsGrouped instance, string filter)
+    public static async System.Threading.Tasks.Task<(int count, DateTime lastUpdate)> TupleReturnWithTraceAsync(this IAllSignaturesMethodsGrouped instance, string filter)
     {
         using var activity = Utils.StartActivity("AsyncTupleReturn", ActivityKind.Internal);
 
         if (Utils.ShouldRecordData(activity))
         {
-            activity?.SetTag("tag.filter", filter);
+            var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();
+            __inputTags["tag.filter"] = filter;
+            activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"AsyncTupleReturn\""));
-                return await instance.AsyncTupleReturn(filter);
 
+                var __result = await instance.AsyncTupleReturn(filter);
+
+                var __outputTags = new System.Collections.Generic.Dictionary<string, object?>();
+            __outputTags["result"] = __result;
+            activity?.SetTag("output.parameters", System.Text.Json.JsonSerializer.Serialize(__outputTags, Utils.TelemetryJsonSerializerOptions));
+                return __result;
             }
             catch (Exception ex)
             {
+                activity?.SetTag("error", true);
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
-                activity?.SetTag("exception.message", ex.Message);
-                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                activity?.SetTag("error.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("error.message", ex.Message);
+                activity?.SetTag("error.stacktrace", ex.StackTrace);
+
                 if (ex.InnerException is not null)
                 {
-                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
-                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                    activity?.SetTag("error.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("error.inner_message", ex.InnerException.Message);
                 }
-                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"AsyncTupleReturn\""));
+
                 activity?.AddException(ex);
+
                 throw;
             }
             finally
@@ -1447,7 +1717,9 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         }
         else
         {
-            return await instance.AsyncTupleReturn(filter);
+            var __result = await instance.AsyncTupleReturn(filter);
+
+            return __result;
         }
     }
 
@@ -1457,34 +1729,40 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
 
         if (Utils.ShouldRecordData(activity))
         {
-            activity?.SetTag("tag.int", nullableInt);
-            activity?.SetTag("tag.long", nullableLong);
-            activity?.SetTag("tag.short", nullableShort);
-            activity?.SetTag("tag.byte", nullableByte);
-            activity?.SetTag("tag.bool", nullableBool);
-            activity?.SetTag("tag.char", nullableChar);
-            activity?.SetTag("tag.double", nullableDouble);
-            activity?.SetTag("tag.float", nullableFloat);
-            activity?.SetTag("tag.decimal", nullableDecimal);
+            var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();
+            __inputTags["tag.int"] = nullableInt;
+            __inputTags["tag.long"] = nullableLong;
+            __inputTags["tag.short"] = nullableShort;
+            __inputTags["tag.byte"] = nullableByte;
+            __inputTags["tag.bool"] = nullableBool;
+            __inputTags["tag.char"] = nullableChar;
+            __inputTags["tag.double"] = nullableDouble;
+            __inputTags["tag.float"] = nullableFloat;
+            __inputTags["tag.decimal"] = nullableDecimal;
+            activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"NullablePrimitives\""));
+
                 instance.NullablePrimitives(nullableInt, nullableLong, nullableShort, nullableByte, nullableBool, nullableChar, nullableDouble, nullableFloat, nullableDecimal);
 
             }
             catch (Exception ex)
             {
+                activity?.SetTag("error", true);
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
-                activity?.SetTag("exception.message", ex.Message);
-                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                activity?.SetTag("error.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("error.message", ex.Message);
+                activity?.SetTag("error.stacktrace", ex.StackTrace);
+
                 if (ex.InnerException is not null)
                 {
-                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
-                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                    activity?.SetTag("error.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("error.inner_message", ex.InnerException.Message);
                 }
-                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"NullablePrimitives\""));
+
                 activity?.AddException(ex);
+
                 throw;
             }
             finally
@@ -1495,6 +1773,7 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         else
         {
             instance.NullablePrimitives(nullableInt, nullableLong, nullableShort, nullableByte, nullableBool, nullableChar, nullableDouble, nullableFloat, nullableDecimal);
+
         }
     }
 
@@ -1504,26 +1783,32 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
 
         if (Utils.ShouldRecordData(activity))
         {
-            activity?.SetTag("tag.duration", duration);
+            var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();
+            __inputTags["tag.duration"] = duration;
+            activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"NullableTimeSpan\""));
+
                 instance.NullableTimeSpan(duration);
 
             }
             catch (Exception ex)
             {
+                activity?.SetTag("error", true);
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
-                activity?.SetTag("exception.message", ex.Message);
-                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                activity?.SetTag("error.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("error.message", ex.Message);
+                activity?.SetTag("error.stacktrace", ex.StackTrace);
+
                 if (ex.InnerException is not null)
                 {
-                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
-                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                    activity?.SetTag("error.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("error.inner_message", ex.InnerException.Message);
                 }
-                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"NullableTimeSpan\""));
+
                 activity?.AddException(ex);
+
                 throw;
             }
             finally
@@ -1534,6 +1819,7 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         else
         {
             instance.NullableTimeSpan(duration);
+
         }
     }
 
@@ -1543,27 +1829,37 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
 
         if (Utils.ShouldRecordData(activity))
         {
-            activity?.SetTag("tag.url", url);
-            activity?.SetTag("tag.method", method);
+            var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();
+            __inputTags["tag.url"] = url;
+            __inputTags["tag.method"] = method;
+            activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"UnknownOperation\""));
-                return await instance.ClientActivity(url, method);
 
+                var __result = await instance.ClientActivity(url, method);
+
+                var __outputTags = new System.Collections.Generic.Dictionary<string, object?>();
+            __outputTags["result"] = __result;
+            activity?.SetTag("output.parameters", System.Text.Json.JsonSerializer.Serialize(__outputTags, Utils.TelemetryJsonSerializerOptions));
+                return __result;
             }
             catch (Exception ex)
             {
+                activity?.SetTag("error", true);
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
-                activity?.SetTag("exception.message", ex.Message);
-                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                activity?.SetTag("error.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("error.message", ex.Message);
+                activity?.SetTag("error.stacktrace", ex.StackTrace);
+
                 if (ex.InnerException is not null)
                 {
-                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
-                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                    activity?.SetTag("error.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("error.inner_message", ex.InnerException.Message);
                 }
-                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"UnknownOperation\""));
+
                 activity?.AddException(ex);
+
                 throw;
             }
             finally
@@ -1573,7 +1869,9 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         }
         else
         {
-            return await instance.ClientActivity(url, method);
+            var __result = await instance.ClientActivity(url, method);
+
+            return __result;
         }
     }
 
@@ -1583,26 +1881,32 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
 
         if (Utils.ShouldRecordData(activity))
         {
-            activity?.SetTag("tag.data", data);
+            var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();
+            __inputTags["tag.data"] = data;
+            activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"WithDelegates\""));
+
                 await instance.WithDelegates(data, callback, asyncCallback);
 
             }
             catch (Exception ex)
             {
+                activity?.SetTag("error", true);
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
-                activity?.SetTag("exception.message", ex.Message);
-                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                activity?.SetTag("error.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("error.message", ex.Message);
+                activity?.SetTag("error.stacktrace", ex.StackTrace);
+
                 if (ex.InnerException is not null)
                 {
-                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
-                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                    activity?.SetTag("error.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("error.inner_message", ex.InnerException.Message);
                 }
-                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"WithDelegates\""));
+
                 activity?.AddException(ex);
+
                 throw;
             }
             finally
@@ -1613,6 +1917,7 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         else
         {
             await instance.WithDelegates(data, callback, asyncCallback);
+
         }
     }
 
@@ -1622,28 +1927,34 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
 
         if (Utils.ShouldRecordData(activity))
         {
-            activity?.SetTag("tag.profiles", System.Text.Json.JsonSerializer.Serialize(profiles));
-            activity?.SetTag("tag.coordsList", System.Text.Json.JsonSerializer.Serialize(coordsList));
-            activity?.SetTag("tag.kindDict", System.Text.Json.JsonSerializer.Serialize(kindDict));
+            var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();
+            __inputTags["tag.profiles"] = System.Text.Json.JsonSerializer.Serialize(profiles, Utils.TelemetryJsonSerializerOptions);
+            __inputTags["tag.coordsList"] = System.Text.Json.JsonSerializer.Serialize(coordsList, Utils.TelemetryJsonSerializerOptions);
+            __inputTags["tag.kindDict"] = System.Text.Json.JsonSerializer.Serialize(kindDict, Utils.TelemetryJsonSerializerOptions);
+            activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"CustomTypeCollections\""));
+
                 await instance.CustomTypeCollections(profiles, coordsList, kindDict);
 
             }
             catch (Exception ex)
             {
+                activity?.SetTag("error", true);
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
-                activity?.SetTag("exception.message", ex.Message);
-                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                activity?.SetTag("error.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("error.message", ex.Message);
+                activity?.SetTag("error.stacktrace", ex.StackTrace);
+
                 if (ex.InnerException is not null)
                 {
-                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
-                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                    activity?.SetTag("error.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("error.inner_message", ex.InnerException.Message);
                 }
-                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"CustomTypeCollections\""));
+
                 activity?.AddException(ex);
+
                 throw;
             }
             finally
@@ -1654,6 +1965,7 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         else
         {
             await instance.CustomTypeCollections(profiles, coordsList, kindDict);
+
         }
     }
 
@@ -1667,22 +1979,26 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"CustomTypeCollectionsNoSerialize\""));
+
                 await instance.CustomTypeCollectionsNoSerialize(profiles, coordsList);
 
             }
             catch (Exception ex)
             {
+                activity?.SetTag("error", true);
                 activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
-                activity?.SetTag("exception.message", ex.Message);
-                activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                activity?.SetTag("error.type", ex.GetType().FullName ?? ex.GetType().Name);
+                activity?.SetTag("error.message", ex.Message);
+                activity?.SetTag("error.stacktrace", ex.StackTrace);
+
                 if (ex.InnerException is not null)
                 {
-                    activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
-                    activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                    activity?.SetTag("error.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                    activity?.SetTag("error.inner_message", ex.InnerException.Message);
                 }
-                activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"CustomTypeCollectionsNoSerialize\""));
+
                 activity?.AddException(ex);
+
                 throw;
             }
             finally
@@ -1693,6 +2009,7 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         else
         {
             await instance.CustomTypeCollectionsNoSerialize(profiles, coordsList);
+
         }
     }
 

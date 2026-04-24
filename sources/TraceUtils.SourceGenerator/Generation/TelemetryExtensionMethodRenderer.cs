@@ -23,17 +23,22 @@ internal static class TelemetryExtensionMethodRenderer
     {
         var methodSymbol = context.MethodSymbol;
         var signature = BuildExtensionSignature(methodSymbol, context.ContainingTypeName);
-        var call = BuildMethodCall(methodSymbol);
-        var preCallTags = BuildPreCallTags(methodSymbol);
-        var postCallTags = BuildPostCallTags(methodSymbol);
+        var (call, returnStatement, hasResultVariable) = BuildMethodCall(methodSymbol);
+        var inputTagBlock = BuildInputTagBlock(methodSymbol, context.InputParametersName);
+        var outputTagBlock = BuildOutputTagBlock(
+            methodSymbol,
+            context.OutputParametersName,
+            context.RecordOutputData,
+            hasResultVariable);
 
         return TelemetryGenerationConstants.ExtensionMethodTemplate
             .Replace("{{signature}}", signature)
             .Replace("{{OperationName}}", context.OperationName)
             .Replace("{{ActivityType}}", context.ActivityType)
-            .Replace("{{PreCallTags}}", preCallTags)
+            .Replace("{{InputTagBlock}}", inputTagBlock)
             .Replace("{{Call}}", call)
-            .Replace("{{PostCallTags}}", postCallTags);
+            .Replace("{{OutputTagBlock}}", outputTagBlock)
+            .Replace("{{ReturnStatement}}", returnStatement);
     }
 
     private static string BuildExtensionSignature(IMethodSymbol methodSymbol, string containingTypeName)
@@ -239,18 +244,15 @@ internal static class TelemetryExtensionMethodRenderer
         return sb.ToString();
     }
 
-    private static string BuildMethodCall(IMethodSymbol methodSymbol)
+    private static (string Call, string ReturnStatement, bool HasResultVariable) BuildMethodCall(IMethodSymbol methodSymbol)
     {
         var sb = new StringBuilder();
         var isAsync = IsAsyncMethod(methodSymbol);
-        var returnType = methodSymbol.ReturnType.ToDisplayString();
-        var hasReturnValue = !methodSymbol.ReturnsVoid &&
-            returnType != "System.Threading.Tasks.Task" &&
-            returnType != "System.Threading.Tasks.ValueTask";
+        var hasReturnValue = HasReturnValue(methodSymbol);
 
         if (hasReturnValue)
         {
-            sb.Append("return ");
+            sb.Append("var __result = ");
         }
 
         if (isAsync)
@@ -284,15 +286,18 @@ internal static class TelemetryExtensionMethodRenderer
         sb.Append(string.Join(", ", paramCalls));
         sb.Append(");");
 
-        return sb.ToString();
+        var returnStatement = hasReturnValue ? "return __result;" : string.Empty;
+        return (sb.ToString(), returnStatement, hasReturnValue);
     }
 
     private static readonly string PreCallTagIndent = new string(' ', 12);
 
-    private static string BuildPreCallTags(IMethodSymbol methodSymbol)
+    private static string BuildInputTagBlock(IMethodSymbol methodSymbol, string inputParametersName)
     {
         var sb = new StringBuilder();
-        var first = true;
+        var hasAnyInputTags = false;
+
+        sb.Append("var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();");
 
         foreach (var parameter in methodSymbol.Parameters)
         {
@@ -309,18 +314,43 @@ internal static class TelemetryExtensionMethodRenderer
             if (tagValue == null)
                 continue;
 
-            if (!first)
-                sb.Append('\n').Append(PreCallTagIndent);
-            sb.Append($"activity?.SetTag(\"{tagName}\", {tagValue});");
-            first = false;
+            sb.Append('\n')
+              .Append(PreCallTagIndent)
+              .Append($"__inputTags[\"{EscapeString(tagName)}\"] = {tagValue};");
+            hasAnyInputTags = true;
         }
 
-        return sb.ToString().TrimEnd();
+        if (!hasAnyInputTags)
+            return string.Empty;
+
+        sb.Append('\n')
+          .Append(PreCallTagIndent)
+          .Append($"activity?.SetTag(\"{EscapeString(inputParametersName)}\", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));");
+
+        return sb.ToString();
     }
 
-    private static string BuildPostCallTags(IMethodSymbol methodSymbol)
+    private static string BuildOutputTagBlock(
+        IMethodSymbol methodSymbol,
+        string outputParametersName,
+        bool recordOutputData,
+        bool hasResultVariable)
     {
+        if (!recordOutputData)
+            return string.Empty;
+
         var sb = new StringBuilder();
+        var hasAnyOutputTags = false;
+
+        sb.Append("var __outputTags = new System.Collections.Generic.Dictionary<string, object?>();");
+
+        if (hasResultVariable)
+        {
+            sb.Append('\n')
+              .Append(PreCallTagIndent)
+              .Append("__outputTags[\"result\"] = __result;");
+            hasAnyOutputTags = true;
+        }
 
         foreach (var parameter in methodSymbol.Parameters)
         {
@@ -336,10 +366,18 @@ internal static class TelemetryExtensionMethodRenderer
             if (tagValue == null)
                 continue;
 
-            if (sb.Length > 0)
-                sb.Append('\n').Append(PreCallTagIndent);
-            sb.Append($"activity?.SetTag(\"{tagName}\", {tagValue});");
+            sb.Append('\n')
+              .Append(PreCallTagIndent)
+              .Append($"__outputTags[\"{EscapeString(tagName)}\"] = {tagValue};");
+            hasAnyOutputTags = true;
         }
+
+        if (!hasAnyOutputTags)
+            return string.Empty;
+
+        sb.Append('\n')
+          .Append(PreCallTagIndent)
+          .Append($"activity?.SetTag(\"{EscapeString(outputParametersName)}\", System.Text.Json.JsonSerializer.Serialize(__outputTags, Utils.TelemetryJsonSerializerOptions));");
 
         return sb.ToString();
     }
@@ -357,7 +395,7 @@ internal static class TelemetryExtensionMethodRenderer
                 var shouldSerialize = attr.ConstructorArguments.Length > 1
                     && attr.ConstructorArguments[1].Value is bool serialize
                         ? serialize
-                        : true;
+                        : false;
 
                 return (tagName, shouldSerialize);
             }
@@ -390,13 +428,13 @@ internal static class TelemetryExtensionMethodRenderer
         if (IsArrayOrGenericType(parameterType))
         {
             return shouldSerialize
-                ? $"System.Text.Json.JsonSerializer.Serialize({parameter.Name})"
+                ? $"System.Text.Json.JsonSerializer.Serialize({parameter.Name}, Utils.TelemetryJsonSerializerOptions)"
                 : null;
         }
 
         if (shouldSerialize)
         {
-            return $"System.Text.Json.JsonSerializer.Serialize({parameter.Name})";
+            return $"System.Text.Json.JsonSerializer.Serialize({parameter.Name}, Utils.TelemetryJsonSerializerOptions)";
         }
 
         return null;
@@ -474,5 +512,15 @@ internal static class TelemetryExtensionMethodRenderer
         }
         return typeSymbol;
     }
+
+    private static bool HasReturnValue(IMethodSymbol methodSymbol)
+    {
+        var returnType = methodSymbol.ReturnType.ToDisplayString();
+        return !methodSymbol.ReturnsVoid &&
+               returnType != "System.Threading.Tasks.Task" &&
+               returnType != "System.Threading.Tasks.ValueTask";
+    }
+
+    private static string EscapeString(string value) => value.Replace("\\", "\\\\").Replace("\"", "\\\"");
 
 }

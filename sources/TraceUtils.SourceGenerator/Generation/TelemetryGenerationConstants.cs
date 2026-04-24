@@ -46,26 +46,32 @@ internal static class TelemetryGenerationConstants
 
             if (Utils.ShouldRecordData(activity))
             {
-                {{PreCallTags}}
+                {{InputTagBlock}}
                 try
                 {
                     activity?.AddEvent(new ActivityEvent("Начало события \"{{OperationName}}\""));
+                    
                     {{Call}}
-                    {{PostCallTags}}
+                    
+                    {{OutputTagBlock}}                    
+                    {{ReturnStatement}}
                 }
                 catch (Exception ex)
                 {
+                    activity?.SetTag("error", true);
                     activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                    activity?.SetTag("exception.type", ex.GetType().FullName ?? ex.GetType().Name);
-                    activity?.SetTag("exception.message", ex.Message);
-                    activity?.SetTag("exception.stacktrace", ex.StackTrace);
+                    activity?.SetTag("error.type", ex.GetType().FullName ?? ex.GetType().Name);
+                    activity?.SetTag("error.message", ex.Message);
+                    activity?.SetTag("error.stacktrace", ex.StackTrace);
+
                     if (ex.InnerException is not null)
                     {
-                        activity?.SetTag("exception.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
-                        activity?.SetTag("exception.inner_message", ex.InnerException.Message);
+                        activity?.SetTag("error.inner_type", ex.InnerException.GetType().FullName ?? ex.InnerException.GetType().Name);
+                        activity?.SetTag("error.inner_message", ex.InnerException.Message);
                     }
-                    activity?.AddEvent(new ActivityEvent("Ошибка при выполнении операции \"{{OperationName}}\""));
+
                     activity?.AddException(ex);
+
                     throw;
                 }
                 finally
@@ -76,6 +82,8 @@ internal static class TelemetryGenerationConstants
             else
             {
                 {{Call}}
+
+                {{ReturnStatement}}
             }
         }
     """;
