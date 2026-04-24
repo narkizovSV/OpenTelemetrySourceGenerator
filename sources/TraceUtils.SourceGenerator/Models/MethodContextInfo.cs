@@ -17,6 +17,5 @@ public record struct MethodContextInfo(
     string OperationName,
     string ActivityType,
     string InputParametersName,
-    string OutputParametersName,
-    bool RecordOutputData
+    string OutputParametersName
 );

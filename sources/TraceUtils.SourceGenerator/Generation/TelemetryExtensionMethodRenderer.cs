@@ -28,7 +28,6 @@ internal static class TelemetryExtensionMethodRenderer
         var outputTagBlock = BuildOutputTagBlock(
             methodSymbol,
             context.OutputParametersName,
-            context.RecordOutputData,
             hasResultVariable);
 
         return TelemetryGenerationConstants.ExtensionMethodTemplate
@@ -291,6 +290,7 @@ internal static class TelemetryExtensionMethodRenderer
     }
 
     private static readonly string PreCallTagIndent = new string(' ', 12);
+    private static readonly string PostCallTagIndent = new string(' ', 16);
 
     private static string BuildInputTagBlock(IMethodSymbol methodSymbol, string inputParametersName)
     {
@@ -308,8 +308,8 @@ internal static class TelemetryExtensionMethodRenderer
             if (tagInfo == null)
                 continue;
 
-            var (tagName, shouldSerialize) = tagInfo.Value;
-            var tagValue = GetTagValueExpression(parameter, shouldSerialize);
+            var tagName = tagInfo;
+            var tagValue = GetTagValueExpression(parameter);
 
             if (tagValue == null)
                 continue;
@@ -333,12 +333,8 @@ internal static class TelemetryExtensionMethodRenderer
     private static string BuildOutputTagBlock(
         IMethodSymbol methodSymbol,
         string outputParametersName,
-        bool recordOutputData,
         bool hasResultVariable)
     {
-        if (!recordOutputData)
-            return string.Empty;
-
         var sb = new StringBuilder();
         var hasAnyOutputTags = false;
 
@@ -347,7 +343,7 @@ internal static class TelemetryExtensionMethodRenderer
         if (hasResultVariable)
         {
             sb.Append('\n')
-              .Append(PreCallTagIndent)
+              .Append(PostCallTagIndent)
               .Append("__outputTags[\"result\"] = __result;");
             hasAnyOutputTags = true;
         }
@@ -358,16 +354,13 @@ internal static class TelemetryExtensionMethodRenderer
                 continue;
 
             var tagInfo = ExtractTagInfo(parameter);
-            if (tagInfo == null)
-                continue;
-
-            var (tagName, shouldSerialize) = tagInfo.Value;
-            var tagValue = GetTagValueExpression(parameter, shouldSerialize);
+            var tagName = tagInfo ?? parameter.Name;
+            var tagValue = GetTagValueExpression(parameter);
             if (tagValue == null)
                 continue;
 
             sb.Append('\n')
-              .Append(PreCallTagIndent)
+              .Append(PostCallTagIndent)
               .Append($"__outputTags[\"{EscapeString(tagName)}\"] = {tagValue};");
             hasAnyOutputTags = true;
         }
@@ -376,13 +369,13 @@ internal static class TelemetryExtensionMethodRenderer
             return string.Empty;
 
         sb.Append('\n')
-          .Append(PreCallTagIndent)
+          .Append(PostCallTagIndent)
           .Append($"activity?.SetTag(\"{EscapeString(outputParametersName)}\", System.Text.Json.JsonSerializer.Serialize(__outputTags, Utils.TelemetryJsonSerializerOptions));");
 
         return sb.ToString();
     }
 
-    private static (string TagName, bool ShouldSerialize)? ExtractTagInfo(IParameterSymbol parameter)
+    private static string? ExtractTagInfo(IParameterSymbol parameter)
     {
         foreach (var attr in parameter.GetAttributes())
         {
@@ -392,19 +385,14 @@ internal static class TelemetryExtensionMethodRenderer
                     ? attr.ConstructorArguments[0].Value?.ToString() ?? parameter.Name
                     : parameter.Name;
 
-                var shouldSerialize = attr.ConstructorArguments.Length > 1
-                    && attr.ConstructorArguments[1].Value is bool serialize
-                        ? serialize
-                        : false;
-
-                return (tagName, shouldSerialize);
+                return tagName;
             }
         }
 
         return null;
     }
 
-    private static string? GetTagValueExpression(IParameterSymbol parameter, bool shouldSerialize)
+    private static string? GetTagValueExpression(IParameterSymbol parameter)
     {
         var parameterType = parameter.Type;
         var isNullable = IsNullableType(parameterType);
@@ -425,19 +413,14 @@ internal static class TelemetryExtensionMethodRenderer
             return parameter.Name;
         }
 
-        if (IsArrayOrGenericType(parameterType))
+        if (parameterType.TypeKind == TypeKind.Pointer ||
+            parameterType.TypeKind == TypeKind.FunctionPointer ||
+            parameterType.TypeKind == TypeKind.Dynamic)
         {
-            return shouldSerialize
-                ? $"System.Text.Json.JsonSerializer.Serialize({parameter.Name}, Utils.TelemetryJsonSerializerOptions)"
-                : null;
+            return null;
         }
 
-        if (shouldSerialize)
-        {
-            return $"System.Text.Json.JsonSerializer.Serialize({parameter.Name}, Utils.TelemetryJsonSerializerOptions)";
-        }
-
-        return null;
+        return parameter.Name;
     }
 
     private static bool IsNullableType(ITypeSymbol typeSymbol)
@@ -450,17 +433,6 @@ internal static class TelemetryExtensionMethodRenderer
     {
         var actualType = GetUnderlyingType(typeSymbol);
         return actualType.Name == "Guid";
-    }
-
-    private static bool IsArrayOrGenericType(ITypeSymbol typeSymbol)
-    {
-        if (typeSymbol is IArrayTypeSymbol)
-            return true;
-
-        if (typeSymbol is INamedTypeSymbol namedType && namedType.IsGenericType)
-            return true;
-
-        return false;
     }
 
     private static bool IsPrimitiveType(ITypeSymbol typeSymbol)

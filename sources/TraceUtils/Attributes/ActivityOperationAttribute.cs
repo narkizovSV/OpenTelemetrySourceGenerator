@@ -26,22 +26,15 @@ public class ActivityOperationAttribute : Attribute
     /// </summary>
     public string OutputParametersName { get; set; } = "output.parameters";
 
-    /// <summary>
-    /// Нужно ли записывать выходные данные метода.
-    /// </summary>
-    public bool RecordOutputData { get; set; } = true;
-
     public ActivityOperationAttribute(
         string operationName,
         ActivityType activityType,
         string inputParametersName = "input.parameters",
-        string outputParametersName = "output.parameters",
-        bool recordOutputData = true)
+        string outputParametersName = "output.parameters")
     {
         OperationName = operationName ?? throw new ArgumentNullException(nameof(operationName));
         ActivityType = activityType;
         InputParametersName = inputParametersName;
         OutputParametersName = outputParametersName;
-        RecordOutputData = recordOutputData;
     }
 }

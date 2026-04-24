@@ -69,8 +69,8 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
                 var __result = instance.SyncWithReturn();
 
                 var __outputTags = new System.Collections.Generic.Dictionary<string, object?>();
-            __outputTags["result"] = __result;
-            activity?.SetTag("output.parameters", System.Text.Json.JsonSerializer.Serialize(__outputTags, Utils.TelemetryJsonSerializerOptions));
+                __outputTags["result"] = __result;
+                activity?.SetTag("output.parameters", System.Text.Json.JsonSerializer.Serialize(__outputTags, Utils.TelemetryJsonSerializerOptions));
                 return __result;
             }
             catch (Exception ex)
@@ -162,8 +162,8 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
                 var __result = await instance.AsyncTaskWithResult();
 
                 var __outputTags = new System.Collections.Generic.Dictionary<string, object?>();
-            __outputTags["result"] = __result;
-            activity?.SetTag("output.parameters", System.Text.Json.JsonSerializer.Serialize(__outputTags, Utils.TelemetryJsonSerializerOptions));
+                __outputTags["result"] = __result;
+                activity?.SetTag("output.parameters", System.Text.Json.JsonSerializer.Serialize(__outputTags, Utils.TelemetryJsonSerializerOptions));
                 return __result;
             }
             catch (Exception ex)
@@ -255,8 +255,8 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
                 var __result = await instance.AsyncValueTaskWithResult();
 
                 var __outputTags = new System.Collections.Generic.Dictionary<string, object?>();
-            __outputTags["result"] = __result;
-            activity?.SetTag("output.parameters", System.Text.Json.JsonSerializer.Serialize(__outputTags, Utils.TelemetryJsonSerializerOptions));
+                __outputTags["result"] = __result;
+                activity?.SetTag("output.parameters", System.Text.Json.JsonSerializer.Serialize(__outputTags, Utils.TelemetryJsonSerializerOptions));
                 return __result;
             }
             catch (Exception ex)
@@ -683,9 +683,9 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         if (Utils.ShouldRecordData(activity))
         {
             var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();
-            __inputTags["tag.bytes"] = System.Text.Json.JsonSerializer.Serialize(bytes, Utils.TelemetryJsonSerializerOptions);
-            __inputTags["tag.ids"] = System.Text.Json.JsonSerializer.Serialize(ids, Utils.TelemetryJsonSerializerOptions);
-            __inputTags["tag.names"] = System.Text.Json.JsonSerializer.Serialize(names, Utils.TelemetryJsonSerializerOptions);
+            __inputTags["tag.bytes"] = bytes;
+            __inputTags["tag.ids"] = ids;
+            __inputTags["tag.names"] = names;
             activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
@@ -730,7 +730,11 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
 
         if (Utils.ShouldRecordData(activity))
         {
-
+            var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();
+            __inputTags["tag.bytes"] = bytes;
+            __inputTags["tag.ids"] = ids;
+            __inputTags["tag.names"] = names;
+            activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"ArrayNoSerialize\""));
@@ -775,10 +779,10 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         if (Utils.ShouldRecordData(activity))
         {
             var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();
-            __inputTags["tag.list"] = System.Text.Json.JsonSerializer.Serialize(list, Utils.TelemetryJsonSerializerOptions);
-            __inputTags["tag.dict"] = System.Text.Json.JsonSerializer.Serialize(dict, Utils.TelemetryJsonSerializerOptions);
-            __inputTags["tag.enumerable"] = System.Text.Json.JsonSerializer.Serialize(enumerable, Utils.TelemetryJsonSerializerOptions);
-            __inputTags["tag.readonlyList"] = System.Text.Json.JsonSerializer.Serialize(readonlyList, Utils.TelemetryJsonSerializerOptions);
+            __inputTags["tag.list"] = list;
+            __inputTags["tag.dict"] = dict;
+            __inputTags["tag.enumerable"] = enumerable;
+            __inputTags["tag.readonlyList"] = readonlyList;
             activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
@@ -823,7 +827,11 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
 
         if (Utils.ShouldRecordData(activity))
         {
-
+            var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();
+            __inputTags["tag.list"] = list;
+            __inputTags["tag.dict"] = dict;
+            __inputTags["tag.enumerable"] = enumerable;
+            activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"GenericCollectionNoSerialize\""));
@@ -868,8 +876,8 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         if (Utils.ShouldRecordData(activity))
         {
             var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();
-            __inputTags["tag.profile"] = System.Text.Json.JsonSerializer.Serialize(profile, Utils.TelemetryJsonSerializerOptions);
-            __inputTags["tag.nullableProfile"] = System.Text.Json.JsonSerializer.Serialize(nullableProfile, Utils.TelemetryJsonSerializerOptions);
+            __inputTags["tag.profile"] = profile;
+            __inputTags["tag.nullableProfile"] = nullableProfile;
             activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
@@ -914,7 +922,10 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
 
         if (Utils.ShouldRecordData(activity))
         {
-
+            var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();
+            __inputTags["tag.profile"] = profile;
+            __inputTags["tag.nullableProfile"] = nullableProfile;
+            activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"ClassNoSerialize\""));
@@ -959,8 +970,8 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         if (Utils.ShouldRecordData(activity))
         {
             var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();
-            __inputTags["tag.coords"] = System.Text.Json.JsonSerializer.Serialize(coords, Utils.TelemetryJsonSerializerOptions);
-            __inputTags["tag.nullableCoords"] = System.Text.Json.JsonSerializer.Serialize(nullableCoords, Utils.TelemetryJsonSerializerOptions);
+            __inputTags["tag.coords"] = coords;
+            __inputTags["tag.nullableCoords"] = nullableCoords;
             activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
@@ -1005,7 +1016,10 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
 
         if (Utils.ShouldRecordData(activity))
         {
-
+            var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();
+            __inputTags["tag.coords"] = coords;
+            __inputTags["tag.nullableCoords"] = nullableCoords;
+            activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"StructNoSerialize\""));
@@ -1055,9 +1069,12 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
             __inputTags["tag.date"] = date.ToString("O");
             __inputTags["tag.guid"] = guid.ToString();
             __inputTags["tag.kind"] = kind;
-            __inputTags["tag.profile"] = System.Text.Json.JsonSerializer.Serialize(profile, Utils.TelemetryJsonSerializerOptions);
-            __inputTags["tag.coords"] = System.Text.Json.JsonSerializer.Serialize(coords, Utils.TelemetryJsonSerializerOptions);
-            __inputTags["tag.ids"] = System.Text.Json.JsonSerializer.Serialize(ids, Utils.TelemetryJsonSerializerOptions);
+            __inputTags["tag.profile"] = profile;
+            __inputTags["tag.coords"] = coords;
+            __inputTags["tag.ids"] = ids;
+            __inputTags["tag.skipProfile"] = skipProfile;
+            __inputTags["tag.skipCoords"] = skipCoords;
+            __inputTags["tag.skipIds"] = skipIds;
             activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
@@ -1103,7 +1120,7 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         if (Utils.ShouldRecordData(activity))
         {
             var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();
-            __inputTags["tag.input"] = System.Text.Json.JsonSerializer.Serialize(input, Utils.TelemetryJsonSerializerOptions);
+            __inputTags["tag.input"] = input;
             activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
@@ -1112,8 +1129,8 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
                 var __result = instance.GenericMethod<T>(input);
 
                 var __outputTags = new System.Collections.Generic.Dictionary<string, object?>();
-            __outputTags["result"] = __result;
-            activity?.SetTag("output.parameters", System.Text.Json.JsonSerializer.Serialize(__outputTags, Utils.TelemetryJsonSerializerOptions));
+                __outputTags["result"] = __result;
+                activity?.SetTag("output.parameters", System.Text.Json.JsonSerializer.Serialize(__outputTags, Utils.TelemetryJsonSerializerOptions));
                 return __result;
             }
             catch (Exception ex)
@@ -1153,7 +1170,9 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
 
         if (Utils.ShouldRecordData(activity))
         {
-
+            var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();
+            __inputTags["tag.input"] = input;
+            activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"GenericMethodNoSerialize\""));
@@ -1161,8 +1180,8 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
                 var __result = instance.GenericMethodNoSerialize<T>(input);
 
                 var __outputTags = new System.Collections.Generic.Dictionary<string, object?>();
-            __outputTags["result"] = __result;
-            activity?.SetTag("output.parameters", System.Text.Json.JsonSerializer.Serialize(__outputTags, Utils.TelemetryJsonSerializerOptions));
+                __outputTags["result"] = __result;
+                activity?.SetTag("output.parameters", System.Text.Json.JsonSerializer.Serialize(__outputTags, Utils.TelemetryJsonSerializerOptions));
                 return __result;
             }
             catch (Exception ex)
@@ -1204,7 +1223,7 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         if (Utils.ShouldRecordData(activity))
         {
             var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();
-            __inputTags["tag.entity"] = System.Text.Json.JsonSerializer.Serialize(entity, Utils.TelemetryJsonSerializerOptions);
+            __inputTags["tag.entity"] = entity;
             activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
@@ -1251,7 +1270,7 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         if (Utils.ShouldRecordData(activity))
         {
             var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();
-            __inputTags["tag.source"] = System.Text.Json.JsonSerializer.Serialize(source, Utils.TelemetryJsonSerializerOptions);
+            __inputTags["tag.source"] = source;
             activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
@@ -1260,8 +1279,8 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
                 var __result = instance.GenericMultipleTypes<TInput, TOutput>(source);
 
                 var __outputTags = new System.Collections.Generic.Dictionary<string, object?>();
-            __outputTags["result"] = __result;
-            activity?.SetTag("output.parameters", System.Text.Json.JsonSerializer.Serialize(__outputTags, Utils.TelemetryJsonSerializerOptions));
+                __outputTags["result"] = __result;
+                activity?.SetTag("output.parameters", System.Text.Json.JsonSerializer.Serialize(__outputTags, Utils.TelemetryJsonSerializerOptions));
                 return __result;
             }
             catch (Exception ex)
@@ -1312,8 +1331,8 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
                 instance.RefParameters(in inVal, ref refVal, out outVal);
 
                 var __outputTags = new System.Collections.Generic.Dictionary<string, object?>();
-            __outputTags["tag.outVal"] = outVal;
-            activity?.SetTag("output.parameters", System.Text.Json.JsonSerializer.Serialize(__outputTags, Utils.TelemetryJsonSerializerOptions));
+                __outputTags["tag.outVal"] = outVal;
+                activity?.SetTag("output.parameters", System.Text.Json.JsonSerializer.Serialize(__outputTags, Utils.TelemetryJsonSerializerOptions));
 
             }
             catch (Exception ex)
@@ -1399,7 +1418,7 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         if (Utils.ShouldRecordData(activity))
         {
             var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();
-            __inputTags["tag.coords"] = System.Text.Json.JsonSerializer.Serialize(coords, Utils.TelemetryJsonSerializerOptions);
+            __inputTags["tag.coords"] = coords;
             activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
@@ -1536,7 +1555,7 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         {
             var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();
             __inputTags["tag.operation"] = operation;
-            __inputTags["tag.values"] = System.Text.Json.JsonSerializer.Serialize(values, Utils.TelemetryJsonSerializerOptions);
+            __inputTags["tag.values"] = values;
             activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
@@ -1583,6 +1602,7 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         {
             var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();
             __inputTags["tag.operation"] = operation;
+            __inputTags["tag.values"] = values;
             activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
@@ -1637,8 +1657,8 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
                 var __result = instance.TupleReturn(input);
 
                 var __outputTags = new System.Collections.Generic.Dictionary<string, object?>();
-            __outputTags["result"] = __result;
-            activity?.SetTag("output.parameters", System.Text.Json.JsonSerializer.Serialize(__outputTags, Utils.TelemetryJsonSerializerOptions));
+                __outputTags["result"] = __result;
+                activity?.SetTag("output.parameters", System.Text.Json.JsonSerializer.Serialize(__outputTags, Utils.TelemetryJsonSerializerOptions));
                 return __result;
             }
             catch (Exception ex)
@@ -1688,8 +1708,8 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
                 var __result = await instance.AsyncTupleReturn(filter);
 
                 var __outputTags = new System.Collections.Generic.Dictionary<string, object?>();
-            __outputTags["result"] = __result;
-            activity?.SetTag("output.parameters", System.Text.Json.JsonSerializer.Serialize(__outputTags, Utils.TelemetryJsonSerializerOptions));
+                __outputTags["result"] = __result;
+                activity?.SetTag("output.parameters", System.Text.Json.JsonSerializer.Serialize(__outputTags, Utils.TelemetryJsonSerializerOptions));
                 return __result;
             }
             catch (Exception ex)
@@ -1840,8 +1860,8 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
                 var __result = await instance.ClientActivity(url, method);
 
                 var __outputTags = new System.Collections.Generic.Dictionary<string, object?>();
-            __outputTags["result"] = __result;
-            activity?.SetTag("output.parameters", System.Text.Json.JsonSerializer.Serialize(__outputTags, Utils.TelemetryJsonSerializerOptions));
+                __outputTags["result"] = __result;
+                activity?.SetTag("output.parameters", System.Text.Json.JsonSerializer.Serialize(__outputTags, Utils.TelemetryJsonSerializerOptions));
                 return __result;
             }
             catch (Exception ex)
@@ -1928,9 +1948,9 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
         if (Utils.ShouldRecordData(activity))
         {
             var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();
-            __inputTags["tag.profiles"] = System.Text.Json.JsonSerializer.Serialize(profiles, Utils.TelemetryJsonSerializerOptions);
-            __inputTags["tag.coordsList"] = System.Text.Json.JsonSerializer.Serialize(coordsList, Utils.TelemetryJsonSerializerOptions);
-            __inputTags["tag.kindDict"] = System.Text.Json.JsonSerializer.Serialize(kindDict, Utils.TelemetryJsonSerializerOptions);
+            __inputTags["tag.profiles"] = profiles;
+            __inputTags["tag.coordsList"] = coordsList;
+            __inputTags["tag.kindDict"] = kindDict;
             activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
@@ -1975,7 +1995,10 @@ public static class AllSignaturesMethodsGroupedTelemetryExtensions
 
         if (Utils.ShouldRecordData(activity))
         {
-
+            var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();
+            __inputTags["tag.profiles"] = profiles;
+            __inputTags["tag.coordsList"] = coordsList;
+            activity?.SetTag("input.parameters", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));
             try
             {
                 activity?.AddEvent(new ActivityEvent("Начало события \"CustomTypeCollectionsNoSerialize\""));

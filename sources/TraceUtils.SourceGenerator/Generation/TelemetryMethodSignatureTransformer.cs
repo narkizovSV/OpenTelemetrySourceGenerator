@@ -16,7 +16,7 @@ internal static class TelemetryMethodSignatureTransformer
         var containingNamespace = methodSymbol.ContainingNamespace.ToDisplayString();
         var containingTypeName = methodSymbol.ContainingType.Name;
 
-        var (operationName, activityType, inputParametersName, outputParametersName, recordOutputData) = ExtractOperationInfo(attrSyntaxContext.Attributes);
+        var (operationName, activityType, inputParametersName, outputParametersName) = ExtractOperationInfo(attrSyntaxContext.Attributes);
 
         return new MethodContextInfo(
             MethodSymbol: methodSymbol,
@@ -25,12 +25,11 @@ internal static class TelemetryMethodSignatureTransformer
             OperationName: operationName,
             ActivityType: activityType,
             InputParametersName: inputParametersName,
-            OutputParametersName: outputParametersName,
-            RecordOutputData: recordOutputData
+            OutputParametersName: outputParametersName
         );
     }
 
-    private static (string OperationName, string ActivityType, string InputParametersName, string OutputParametersName, bool RecordOutputData) ExtractOperationInfo(ImmutableArray<AttributeData> attributes)
+    private static (string OperationName, string ActivityType, string InputParametersName, string OutputParametersName) ExtractOperationInfo(ImmutableArray<AttributeData> attributes)
     {
         foreach (var attr in attributes)
         {
@@ -63,16 +62,11 @@ internal static class TelemetryMethodSignatureTransformer
                     ? attr.ConstructorArguments[3].Value?.ToString() ?? "output.parameters"
                     : "output.parameters";
 
-                var recordOutputData = attr.ConstructorArguments.Length > 4 &&
-                    attr.ConstructorArguments[4].Value is bool value
-                        ? value
-                        : true;
-
-                return (operationName, activityType, inputParametersName, outputParametersName, recordOutputData);
+                return (operationName, activityType, inputParametersName, outputParametersName);
             }
         }
 
-        return ("UnknownOperation", "Internal", "input.parameters", "output.parameters", true);
+        return ("UnknownOperation", "Internal", "input.parameters", "output.parameters");
     }
 }
 

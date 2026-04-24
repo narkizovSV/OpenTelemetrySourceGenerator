@@ -14,17 +14,10 @@ public class SpanTagAttribute : Attribute
     /// <summary>
     /// 
     /// </summary>
-    public bool ShouldSerialize { get; }
-
-    /// <summary>
-    /// 
-    /// </summary>
     /// <param name="tagName"></param>
-    /// <param name="shouldSerialize"></param>
     /// <exception cref="ArgumentNullException"></exception>
-    public SpanTagAttribute(string tagName, bool shouldSerialize = false)
+    public SpanTagAttribute(string tagName)
     {
         TagName = tagName ?? throw new ArgumentNullException(nameof(tagName));
-        ShouldSerialize = shouldSerialize;
     }
 }
