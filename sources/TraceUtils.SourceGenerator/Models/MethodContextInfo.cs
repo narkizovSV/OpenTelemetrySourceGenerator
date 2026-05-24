@@ -1,4 +1,4 @@
-﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis;
 
 namespace TraceUtils.SourceGenerator.Models;
 
@@ -17,5 +17,6 @@ public record struct MethodContextInfo(
     string OperationName,
     string ActivityType,
     string InputParametersName,
-    string OutputParametersName
+    string OutputParametersName,
+    bool WriteTagsToDictionary
 );

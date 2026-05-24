@@ -1,4 +1,4 @@
-﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis;
 using System.Collections.Immutable;
 using TraceUtils.SourceGenerator.Models;
 
@@ -16,7 +16,8 @@ internal static class TelemetryMethodSignatureTransformer
         var containingNamespace = methodSymbol.ContainingNamespace.ToDisplayString();
         var containingTypeName = methodSymbol.ContainingType.Name;
 
-        var (operationName, activityType, inputParametersName, outputParametersName) = ExtractOperationInfo(attrSyntaxContext.Attributes);
+        var (operationName, activityType, inputParametersName, outputParametersName, writeTagsToDictionary) =
+            ExtractOperationInfo(attrSyntaxContext.Attributes);
 
         return new MethodContextInfo(
             MethodSymbol: methodSymbol,
@@ -25,11 +26,12 @@ internal static class TelemetryMethodSignatureTransformer
             OperationName: operationName,
             ActivityType: activityType,
             InputParametersName: inputParametersName,
-            OutputParametersName: outputParametersName
+            OutputParametersName: outputParametersName,
+            WriteTagsToDictionary: writeTagsToDictionary
         );
     }
 
-    private static (string OperationName, string ActivityType, string InputParametersName, string OutputParametersName) ExtractOperationInfo(ImmutableArray<AttributeData> attributes)
+    private static (string OperationName, string ActivityType, string InputParametersName, string OutputParametersName, bool WriteTagsToDictionary) ExtractOperationInfo(ImmutableArray<AttributeData> attributes)
     {
         foreach (var attr in attributes)
         {
@@ -62,11 +64,31 @@ internal static class TelemetryMethodSignatureTransformer
                     ? attr.ConstructorArguments[3].Value?.ToString() ?? "output.parameters"
                     : "output.parameters";
 
-                return (operationName, activityType, inputParametersName, outputParametersName);
+                var writeTagsToDictionary = attr.ConstructorArguments.Length > 4
+                    && attr.ConstructorArguments[4].Value is bool writeTagsFromCtor
+                    && writeTagsFromCtor;
+
+                foreach (var namedArg in attr.NamedArguments)
+                {
+                    if (namedArg.Key == "WriteTagsToDictionary" && namedArg.Value.Value is bool writeTags)
+                    {
+                        writeTagsToDictionary = writeTags;
+                    }
+                    else if (namedArg.Key == "InputParametersName" && namedArg.Value.Value is string inputName)
+                    {
+                        inputParametersName = inputName;
+                    }
+                    else if (namedArg.Key == "OutputParametersName" && namedArg.Value.Value is string outputName)
+                    {
+                        outputParametersName = outputName;
+                    }
+                }
+
+                return (operationName, activityType, inputParametersName, outputParametersName, writeTagsToDictionary);
             }
         }
 
-        return ("UnknownOperation", "Internal", "input.parameters", "output.parameters");
+        return ("UnknownOperation", "Internal", "input.parameters", "output.parameters", false);
     }
 }
 

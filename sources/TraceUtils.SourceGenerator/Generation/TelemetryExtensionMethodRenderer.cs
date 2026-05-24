@@ -1,4 +1,5 @@
 ﻿using Microsoft.CodeAnalysis;
+using System.Globalization;
 using System.Text;
 using TraceUtils.SourceGenerator.Models;
 
@@ -24,11 +25,15 @@ internal static class TelemetryExtensionMethodRenderer
         var methodSymbol = context.MethodSymbol;
         var signature = BuildExtensionSignature(methodSymbol, context.ContainingTypeName);
         var (call, returnStatement, hasResultVariable) = BuildMethodCall(methodSymbol);
-        var inputTagBlock = BuildInputTagBlock(methodSymbol, context.InputParametersName);
+        var inputTagBlock = BuildInputTagBlock(
+            methodSymbol,
+            context.InputParametersName,
+            context.WriteTagsToDictionary);
         var outputTagBlock = BuildOutputTagBlock(
             methodSymbol,
             context.OutputParametersName,
-            hasResultVariable);
+            hasResultVariable,
+            context.WriteTagsToDictionary);
 
         return TelemetryGenerationConstants.ExtensionMethodTemplate
             .Replace("{{signature}}", signature)
@@ -200,8 +205,26 @@ internal static class TelemetryExtensionMethodRenderer
             return $"({enumTypeName}){rawValue}";
         }
 
-        return param.ExplicitDefaultValue!.ToString();
+        if (paramType.SpecialType == SpecialType.System_Single)
+        {
+            var floatValue = Convert.ToSingle(param.ExplicitDefaultValue, CultureInfo.InvariantCulture);
+            return FormatFloatLiteral(floatValue);
+        }
+
+        if (paramType.SpecialType == SpecialType.System_Double)
+        {
+            var doubleValue = Convert.ToDouble(param.ExplicitDefaultValue, CultureInfo.InvariantCulture);
+            return FormatDoubleLiteral(doubleValue);
+        }
+
+        return Convert.ToString(param.ExplicitDefaultValue, CultureInfo.InvariantCulture) ?? "null";
     }
+
+    private static string FormatFloatLiteral(float value) =>
+        value.ToString("R", CultureInfo.InvariantCulture) + "f";
+
+    private static string FormatDoubleLiteral(double value) =>
+        value.ToString("R", CultureInfo.InvariantCulture);
 
     private static string BuildConstraints(System.Collections.Immutable.ImmutableArray<ITypeParameterSymbol> typeParameters)
     {
@@ -292,60 +315,139 @@ internal static class TelemetryExtensionMethodRenderer
     private static readonly string PreCallTagIndent = new string(' ', 12);
     private static readonly string PostCallTagIndent = new string(' ', 16);
 
-    private static string BuildInputTagBlock(IMethodSymbol methodSymbol, string inputParametersName)
+    private static string BuildInputTagBlock(
+        IMethodSymbol methodSymbol,
+        string inputParametersName,
+        bool writeTagsToDictionary)
     {
-        var sb = new StringBuilder();
-        var hasAnyInputTags = false;
-
-        sb.Append("var __inputTags = new System.Collections.Generic.Dictionary<string, object?>();");
-
-        foreach (var parameter in methodSymbol.Parameters)
-        {
-            if (parameter.RefKind == RefKind.Out)
-                continue;
-
-            var tagInfo = ExtractTagInfo(parameter);
-            if (tagInfo == null)
-                continue;
-
-            var tagName = tagInfo;
-            var tagValue = GetTagValueExpression(parameter);
-
-            if (tagValue == null)
-                continue;
-
-            sb.Append('\n')
-              .Append(PreCallTagIndent)
-              .Append($"__inputTags[\"{EscapeString(tagName)}\"] = {tagValue};");
-            hasAnyInputTags = true;
-        }
-
-        if (!hasAnyInputTags)
+        if (!HasInputTagEntries(methodSymbol))
             return string.Empty;
 
-        sb.Append('\n')
-          .Append(PreCallTagIndent)
-          .Append($"activity?.SetTag(\"{EscapeString(inputParametersName)}\", System.Text.Json.JsonSerializer.Serialize(__inputTags, Utils.TelemetryJsonSerializerOptions));");
+        if (writeTagsToDictionary)
+            return BuildDictionaryInputTagBlock(methodSymbol);
 
+        var sb = new StringBuilder();
+        AppendInputTagEntries(sb, methodSymbol, PreCallTagIndent, individualTags: true);
+        return sb.ToString();
+    }
+
+    private static string BuildDictionaryInputTagBlock(IMethodSymbol methodSymbol)
+    {
+        var sb = new StringBuilder();
+        sb.Append("var __activityTags = new System.Collections.Generic.Dictionary<string, object?>();");
+        AppendInputTagEntries(sb, methodSymbol, PreCallTagIndent, individualTags: false, "__activityTags");
         return sb.ToString();
     }
 
     private static string BuildOutputTagBlock(
         IMethodSymbol methodSymbol,
         string outputParametersName,
-        bool hasResultVariable)
+        bool hasResultVariable,
+        bool writeTagsToDictionary)
     {
-        var sb = new StringBuilder();
-        var hasAnyOutputTags = false;
+        var hasInputTagEntries = HasInputTagEntries(methodSymbol);
+        var hasAnyOutputTags = HasOutputTagEntries(methodSymbol, hasResultVariable);
 
-        sb.Append("var __outputTags = new System.Collections.Generic.Dictionary<string, object?>();");
+        if (!writeTagsToDictionary)
+        {
+            if (!hasAnyOutputTags)
+                return string.Empty;
 
+            var sb = new StringBuilder();
+            AppendOutputTagEntries(sb, methodSymbol, outputParametersName, hasResultVariable, PostCallTagIndent, individualTags: true);
+            return sb.ToString();
+        }
+
+        if (!hasInputTagEntries && !hasAnyOutputTags)
+            return string.Empty;
+
+        var merged = new StringBuilder();
+
+        if (!hasInputTagEntries)
+        {
+            merged.Append("var __activityTags = new System.Collections.Generic.Dictionary<string, object?>();");
+        }
+
+        AppendOutputTagEntries(merged, methodSymbol, outputParametersName, hasResultVariable, PostCallTagIndent, individualTags: false, "__activityTags");
+
+        merged.Append('\n')
+              .Append(PostCallTagIndent)
+              .Append($"activity?.SetTag(\"{EscapeString(outputParametersName)}\", System.Text.Json.JsonSerializer.Serialize(__activityTags, Utils.TelemetryJsonSerializerOptions));");
+
+        return merged.ToString();
+    }
+
+    private static void AppendInputTagEntries(
+        StringBuilder sb,
+        IMethodSymbol methodSymbol,
+        string indent,
+        bool individualTags,
+        string? dictionaryName = null)
+    {
+        foreach (var parameter in methodSymbol.Parameters)
+        {
+            if (parameter.RefKind == RefKind.Out)
+                continue;
+
+            var tagName = ExtractTagInfo(parameter);
+            if (tagName == null)
+                continue;
+
+            var tagValue = GetTagValueExpression(parameter);
+            if (tagValue == null)
+                continue;
+
+            if (individualTags)
+            {
+                AppendIndividualSetTag(sb, indent, tagName, tagValue, parameter.Type);
+            }
+            else
+            {
+                sb.Append('\n')
+                  .Append(indent)
+                  .Append($"{dictionaryName}[\"{EscapeString(tagName)}\"] = {tagValue};");
+            }
+        }
+    }
+
+    private static bool HasInputTagEntries(IMethodSymbol methodSymbol) =>
+        methodSymbol.Parameters.Any(p =>
+            p.RefKind != RefKind.Out &&
+            ExtractTagInfo(p) != null &&
+            GetTagValueExpression(p) != null);
+
+    private static bool HasOutputTagEntries(IMethodSymbol methodSymbol, bool hasResultVariable)
+    {
+        if (hasResultVariable)
+            return true;
+
+        return methodSymbol.Parameters.Any(p =>
+            p.RefKind == RefKind.Out &&
+            GetTagValueExpression(p) != null);
+    }
+
+    private static void AppendOutputTagEntries(
+        StringBuilder sb,
+        IMethodSymbol methodSymbol,
+        string resultTagName,
+        bool hasResultVariable,
+        string indent,
+        bool individualTags,
+        string? dictionaryName = null)
+    {
         if (hasResultVariable)
         {
-            sb.Append('\n')
-              .Append(PostCallTagIndent)
-              .Append("__outputTags[\"result\"] = __result;");
-            hasAnyOutputTags = true;
+            var resultType = GetMethodResultType(methodSymbol);
+            if (individualTags)
+            {
+                AppendIndividualSetTag(sb, indent, resultTagName, "__result", resultType);
+            }
+            else
+            {
+                sb.Append('\n')
+                  .Append(indent)
+                  .Append($"{dictionaryName}[\"{EscapeString(resultTagName)}\"] = {FormatTagValueExpression("__result", resultType)};");
+            }
         }
 
         foreach (var parameter in methodSymbol.Parameters)
@@ -353,26 +455,93 @@ internal static class TelemetryExtensionMethodRenderer
             if (parameter.RefKind != RefKind.Out)
                 continue;
 
-            var tagInfo = ExtractTagInfo(parameter);
-            var tagName = tagInfo ?? parameter.Name;
+            var tagName = ExtractTagInfo(parameter) ?? parameter.Name;
             var tagValue = GetTagValueExpression(parameter);
+
             if (tagValue == null)
                 continue;
 
-            sb.Append('\n')
-              .Append(PostCallTagIndent)
-              .Append($"__outputTags[\"{EscapeString(tagName)}\"] = {tagValue};");
-            hasAnyOutputTags = true;
+            if (individualTags)
+            {
+                AppendIndividualSetTag(sb, indent, tagName, tagValue, parameter.Type);
+            }
+            else
+            {
+                sb.Append('\n')
+                  .Append(indent)
+                  .Append($"{dictionaryName}[\"{EscapeString(tagName)}\"] = {tagValue};");
+            }
+        }
+    }
+
+    private static void AppendIndividualSetTag(
+        StringBuilder sb,
+        string indent,
+        string tagName,
+        string valueExpression,
+        ITypeSymbol typeSymbol)
+    {
+        sb.Append('\n')
+          .Append(indent)
+          .Append($"activity?.SetTag(\"{EscapeString(tagName)}\", {FormatTagValueExpression(valueExpression, typeSymbol)});");
+    }
+
+    private static string FormatTagValueExpression(string valueExpression, ITypeSymbol typeSymbol) =>
+        ShouldSerializeTagValue(typeSymbol)
+            ? $"System.Text.Json.JsonSerializer.Serialize({valueExpression}, Utils.TelemetryJsonSerializerOptions)"
+            : valueExpression;
+
+    private static ITypeSymbol GetMethodResultType(IMethodSymbol methodSymbol)
+    {
+        var returnType = methodSymbol.ReturnType;
+        if (returnType is INamedTypeSymbol namedType && TryUnwrapAsyncReturnType(namedType, out var unwrapped))
+        {
+            return unwrapped;
         }
 
-        if (!hasAnyOutputTags)
-            return string.Empty;
+        return returnType;
+    }
 
-        sb.Append('\n')
-          .Append(PostCallTagIndent)
-          .Append($"activity?.SetTag(\"{EscapeString(outputParametersName)}\", System.Text.Json.JsonSerializer.Serialize(__outputTags, Utils.TelemetryJsonSerializerOptions));");
+    private static bool TryUnwrapAsyncReturnType(INamedTypeSymbol namedType, out ITypeSymbol unwrapped)
+    {
+        var definition = namedType.OriginalDefinition;
+        if (definition is { IsGenericType: true, Arity: 1 } &&
+            definition.ContainingNamespace.ToDisplayString() == "System.Threading.Tasks" &&
+            definition.Name is "Task`1" or "ValueTask`1")
+        {
+            unwrapped = namedType.TypeArguments[0];
+            return true;
+        }
 
-        return sb.ToString();
+        unwrapped = namedType;
+        return false;
+    }
+
+    private static bool IsTupleType(ITypeSymbol typeSymbol)
+    {
+        if (typeSymbol is INamedTypeSymbol namedType)
+        {
+            if (namedType.IsTupleType)
+                return true;
+
+            var definitionName = namedType.OriginalDefinition.Name;
+            if (definitionName.StartsWith("ValueTuple", StringComparison.Ordinal))
+                return true;
+        }
+
+        return false;
+    }
+
+    private static bool ShouldSerializeTagValue(ITypeSymbol typeSymbol)
+    {
+        if (IsTupleType(typeSymbol))
+            return true;
+
+        if (IsPrimitiveType(typeSymbol) || IsDateTimeType(typeSymbol) || IsGuidType(typeSymbol))
+            return false;
+
+        var actualType = GetUnderlyingType(typeSymbol);
+        return actualType.TypeKind != TypeKind.Enum && actualType.Name != "TimeSpan";
     }
 
     private static string? ExtractTagInfo(IParameterSymbol parameter)
@@ -472,22 +641,25 @@ internal static class TelemetryExtensionMethodRenderer
             return true;
 
         var typeName = actualType.Name;
+
         return typeName is "DateTime" or "DateTimeOffset" or "DateOnly" or "TimeOnly";
     }
 
     private static ITypeSymbol GetUnderlyingType(ITypeSymbol typeSymbol)
     {
-        if (typeSymbol is INamedTypeSymbol namedType &&
+        if (typeSymbol is INamedTypeSymbol namedType && 
             namedType.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T)
         {
             return namedType.TypeArguments[0];
         }
+
         return typeSymbol;
     }
 
     private static bool HasReturnValue(IMethodSymbol methodSymbol)
     {
         var returnType = methodSymbol.ReturnType.ToDisplayString();
+
         return !methodSymbol.ReturnsVoid &&
                returnType != "System.Threading.Tasks.Task" &&
                returnType != "System.Threading.Tasks.ValueTask";

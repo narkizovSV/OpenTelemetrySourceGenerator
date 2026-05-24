@@ -1,3 +1,5 @@
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using TraceUtils.SourceGenerator.Tests.Infrastructure;
 using System.Text;
 
@@ -10,7 +12,19 @@ internal class TelemetryExtensionsGeneratorTests
     {
         var source = EmbeddedSourceReader.ReadSource("AllSignaturesMethods.cs");
         var generated = NormalizeGenerated(GeneratorTestHarness.Run(source).Single().Value);
+        AssertValidCSharpSyntax(generated);
         return VerifyGenerated(generated);
+    }
+
+    private static void AssertValidCSharpSyntax(string source)
+    {
+        var parseOptions = CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.Latest);
+        var errors = CSharpSyntaxTree.ParseText(source, parseOptions)
+            .GetDiagnostics()
+            .Where(d => d.Severity == DiagnosticSeverity.Error)
+            .ToArray();
+
+        Assert.That(errors, Is.Empty, () => string.Join(Environment.NewLine, errors.Select(e => e.ToString())));
     }
 
     private static Task VerifyGenerated(string generated)

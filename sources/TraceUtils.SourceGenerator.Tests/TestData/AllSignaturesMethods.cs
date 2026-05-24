@@ -63,6 +63,20 @@ public interface IAllSignaturesMethodsGrouped
         [SpanTag("tag.name")] string name = "default",
         [SpanTag("tag.enabled")] bool enabled = true);
 
+    [ActivityOperation("FloatDoubleDefaults", ActivityType.Internal)]
+    void FloatDoubleDefaults(
+        [SpanTag("tag.rate")] float rate = 0.5f,
+        [SpanTag("tag.factor")] double factor = 1.25,
+        [SpanTag("tag.bias")] float bias = 1f);
+
+    [ActivityOperation("WriteTagsToDictionary", ActivityType.Internal, writeTagsToDictionary: true)]
+    void WriteTagsToDictionary(
+        [SpanTag("tag.id")] int id,
+        [SpanTag("tag.name")] string name);
+
+    [ActivityOperation("WriteTagsToDictionaryWithReturn", ActivityType.Internal, writeTagsToDictionary: true)]
+    int WriteTagsToDictionaryWithReturn([SpanTag("tag.x")] int x);
+
     // ========== DATETIME (форматируется ToString("O")) ==========
 
     [ActivityOperation("DateTimeTags", ActivityType.Internal)]
