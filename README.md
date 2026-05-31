@@ -1,4 +1,4 @@
-# OpenTelemetrySourceGenerator
+# TelemetryProxy.Generator.NET
 
 A source generator that creates extension methods to wrap interface calls with tracing (`Activity`/span).
 
